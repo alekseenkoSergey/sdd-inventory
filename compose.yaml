@@ -1,6 +1,10 @@
+version: '3.9'
+
 services:
-  postgres:
+  # PostgreSQL Database
+  db:
     image: postgres:16-alpine
+    container_name: sdd-inventory-db
     environment:
       POSTGRES_DB: sdd_inventory
       POSTGRES_USER: inventory_user
@@ -10,10 +14,48 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U inventory_user -d sdd_inventory" ]
+      test: ["CMD-SHELL", "pg_isready -U inventory_user -d sdd_inventory"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
+
+  # Spring Boot Backend
+  backend:
+    container_name: sdd-inventory-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sdd_inventory
+      SPRING_DATASOURCE_USERNAME: inventory_user
+      SPRING_DATASOURCE_PASSWORD: inventory_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Angular Frontend
+  frontend:
+    container_name: sdd-inventory-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
