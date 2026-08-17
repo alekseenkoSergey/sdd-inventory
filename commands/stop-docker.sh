@@ -4,6 +4,6 @@
 cd "$(dirname "$0")/.."
 
 echo "Stopping Docker Compose containers..."
-docker-compose -f compose.yaml down
+docker compose down
 
 echo "Containers stopped!"

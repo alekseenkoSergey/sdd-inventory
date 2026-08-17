@@ -1,6 +1,9 @@
 spring:
   application:
     name: sdd-inventory
+  docker:
+    compose:
+      enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/sdd_inventory
     driverClassName: org.postgresql.Driver
