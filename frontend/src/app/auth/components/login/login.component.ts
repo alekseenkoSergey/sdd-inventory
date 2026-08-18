@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OAuthService } from '../../services/oauth.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  standalone: true,
+  imports: [CommonModule]
 })
 export class LoginComponent {
   errorMessage: string | null = null;

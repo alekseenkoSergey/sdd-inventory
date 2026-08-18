@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     provider VARCHAR(64) NOT NULL,
     provider_user_id VARCHAR(255) NOT NULL,
     email VARCHAR(255),
