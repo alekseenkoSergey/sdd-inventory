@@ -1,0 +1,13 @@
+<div class="login-container">
+  <div class="login-box">
+    <h1>Login to Inventory Tracker</h1>
+
+    <button (click)="loginWithGoogle()" class="google-login-btn">
+      <span>Login with Google</span>
+    </button>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

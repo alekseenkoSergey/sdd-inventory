@@ -1,0 +1,14 @@
+<div class="logout-container">
+  <button
+    (click)="logout()"
+    [disabled]="isLoggingOut"
+    class="logout-btn"
+  >
+    <span *ngIf="!isLoggingOut">Logout</span>
+    <span *ngIf="isLoggingOut">Logging out...</span>
+  </button>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>

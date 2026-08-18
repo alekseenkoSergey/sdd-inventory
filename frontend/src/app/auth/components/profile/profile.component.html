@@ -1,0 +1,21 @@
+<div class="profile-container">
+  <div *ngIf="loading" class="loading">
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="profile && !loading" class="profile-content">
+    <div *ngIf="profile.avatarUrl" class="avatar">
+      <img [src]="profile.avatarUrl" [alt]="profile.displayName || 'User Avatar'" />
+    </div>
+
+    <div class="profile-info">
+      <h2>{{ profile.displayName || 'User Profile' }}</h2>
+      <p *ngIf="profile.email"><strong>Email:</strong> {{ profile.email }}</p>
+      <p *ngIf="profile.provider"><strong>Provider:</strong> {{ profile.provider }}</p>
+    </div>
+  </div>
+</div>

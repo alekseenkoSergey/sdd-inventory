@@ -24,12 +24,12 @@
 
 **Purpose**: Project initialization and configuration for authentication feature
 
-- [ ] T001 Create directory structure per plan.md: `backend/src/main/java/com/example/inventory/{controller,service,entity,repository,model,config}` and `frontend/src/app/auth/{components,services,guards,interceptors,models}`
-- [ ] T002 Configure Spring Boot OAuth2 Client starter dependency in `backend/pom.xml`
-- [ ] T003 [P] Configure Google OAuth credentials in `backend/src/main/resources/application.yml` with client-id, client-secret, scopes (openid, email, profile)
-- [ ] T004 [P] Configure Spring Session timeout (12 hours) in `backend/src/main/resources/application.yml`
-- [ ] T005 [P] Setup Angular HTTP client with credentials support in `frontend/src/app/core/http/api.service.ts`
-- [ ] T006 Create Flyway migration directory structure: `backend/src/main/resources/db/migration/`
+- [x] T001 Create directory structure per plan.md: `backend/src/main/java/com/example/inventory/{controller,service,entity,repository,model,config}` and `frontend/src/app/auth/{components,services,guards,interceptors,models}`
+- [x] T002 Configure Spring Boot OAuth2 Client starter dependency in `backend/pom.xml`
+- [x] T003 [P] Configure Google OAuth credentials in `backend/src/main/resources/application.yml` with client-id, client-secret, scopes (openid, email, profile)
+- [x] T004 [P] Configure Spring Session timeout (12 hours) in `backend/src/main/resources/application.yml`
+- [x] T005 [P] Setup Angular HTTP client with credentials support in `frontend/src/app/core/http/api.service.ts`
+- [x] T006 Create Flyway migration directory structure: `backend/src/main/resources/db/migration/`
 
 **Checkpoint**: Infrastructure configured, OAuth credentials set, session timeout defined
 
@@ -41,19 +41,19 @@
 
 ⚠️ **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 [P] Create User JPA entity in `backend/src/main/java/com/example/inventory/entity/User.java` with fields: id (Long, auto-generated), provider (String, non-null), providerUserId (String, non-null), email (String, nullable), displayName (String, nullable), avatarUrl (String, nullable), createdAt (Timestamp), updatedAt (Timestamp), and unique constraint on (provider, providerUserId)
-- [ ] T008 [P] Create UserRepository (Spring Data) in `backend/src/main/java/com/example/inventory/repository/UserRepository.java` with method: `Optional<User> findByProviderAndProviderUserId(String provider, String providerUserId)`
-- [ ] T009 Create Flyway migration `backend/src/main/resources/db/migration/V2__create_users_table.sql` to create users table with schema from data-model.md, unique constraint on (provider, provider_user_id), and indexes for lookup optimization
-- [ ] T010 Create UserProfileResponseDTO in `backend/src/main/java/com/example/inventory/model/UserProfileResponseDTO.java` with fields: id, provider, email, displayName, avatarUrl
-- [ ] T011 [P] Create CustomOAuth2UserService in `backend/src/main/java/com/example/inventory/service/CustomOAuth2UserService.java` extending `DefaultOAuth2UserService` with `loadUser()` override to: call parent, lookup user by (provider, providerUserId), create new User if not found with OAuth profile data, return OAuth2User to Spring Security
-- [ ] T012 Create SecurityConfig in `backend/src/main/java/com/example/inventory/config/SecurityConfig.java` with: OAuth2 login configuration, CustomOAuth2UserService bean registration, CSRF protection, session management (12h timeout), CORS allowing credentials
-- [ ] T013 Create ExceptionHandler (centralized @ControllerAdvice) in `backend/src/main/java/com/example/inventory/config/ExceptionHandler.java` with handlers for: OAuth2AuthenticationException, Unauthorized (401), InternalServerError (500), returning consistent error JSON format per contracts
-- [ ] T014 [P] Create AuthService in `backend/src/main/java/com/example/inventory/service/AuthService.java` with methods: `getCurrentUser()` (returns authenticated User), `logoutUser()` (invalidates session), `getUserProfile()` (fetches User by ID), and SLF4J logging for all auth events (login, logout, token refresh, failures with timestamp and user ID)
-- [ ] T015 [P] Create frontend AuthService in `frontend/src/app/auth/services/auth.service.ts` with methods: `login()` (initiates OAuth flow), `logout()` (calls POST /api/auth/logout), `getProfile()` (calls GET /api/auth/user/profile), `isAuthenticated()` (checks session), storing auth state in service
-- [ ] T016 [P] Create frontend OAuthService in `frontend/src/app/auth/services/oauth.service.ts` with: `initiateGoogleLogin()` (redirects to GET /api/auth/login), handles OAuth callback, manages redirect URIs
-- [ ] T017 Create frontend auth HTTP interceptor in `frontend/src/app/auth/interceptors/auth.interceptor.ts` implementing `HttpInterceptor` with: automatic credential attachment (`withCredentials: true`), 401 response handling (redirect to login), token refresh retry logic if needed
-- [ ] T018 Create frontend auth route guard in `frontend/src/app/auth/guards/auth.guard.ts` implementing `CanActivate` to: check authentication state via AuthService, redirect to login if unauthenticated, allow navigation if authenticated
-- [ ] T019 Verify Spring Security OAuth2 Client autoconfigures token refresh in `backend/src/main/java/com/example/inventory/config/SecurityConfig.java`:
+- [x] T007 [P] Create User JPA entity in `backend/src/main/java/com/example/inventory/entity/User.java` with fields: id (Long, auto-generated), provider (String, non-null), providerUserId (String, non-null), email (String, nullable), displayName (String, nullable), avatarUrl (String, nullable), createdAt (Timestamp), updatedAt (Timestamp), and unique constraint on (provider, providerUserId)
+- [x] T008 [P] Create UserRepository (Spring Data) in `backend/src/main/java/com/example/inventory/repository/UserRepository.java` with method: `Optional<User> findByProviderAndProviderUserId(String provider, String providerUserId)`
+- [x] T009 Create Flyway migration `backend/src/main/resources/db/migration/V2__create_users_table.sql` to create users table with schema from data-model.md, unique constraint on (provider, provider_user_id), and indexes for lookup optimization
+- [x] T010 Create UserProfileResponseDTO in `backend/src/main/java/com/example/inventory/model/UserProfileResponseDTO.java` with fields: id, provider, email, displayName, avatarUrl
+- [x] T011 [P] Create CustomOAuth2UserService in `backend/src/main/java/com/example/inventory/service/CustomOAuth2UserService.java` extending `DefaultOAuth2UserService` with `loadUser()` override to: call parent, lookup user by (provider, providerUserId), create new User if not found with OAuth profile data, return OAuth2User to Spring Security
+- [x] T012 Create SecurityConfig in `backend/src/main/java/com/example/inventory/config/SecurityConfig.java` with: OAuth2 login configuration, CustomOAuth2UserService bean registration, CSRF protection, session management (12h timeout), CORS allowing credentials
+- [x] T013 Create ExceptionHandler (centralized @ControllerAdvice) in `backend/src/main/java/com/example/inventory/config/ExceptionHandler.java` with handlers for: OAuth2AuthenticationException, Unauthorized (401), InternalServerError (500), returning consistent error JSON format per contracts
+- [x] T014 [P] Create AuthService in `backend/src/main/java/com/example/inventory/service/AuthService.java` with methods: `getCurrentUser()` (returns authenticated User), `logoutUser()` (invalidates session), `getUserProfile()` (fetches User by ID), and SLF4J logging for all auth events (login, logout, token refresh, failures with timestamp and user ID)
+- [x] T015 [P] Create frontend AuthService in `frontend/src/app/auth/services/auth.service.ts` with methods: `login()` (initiates OAuth flow), `logout()` (calls POST /api/auth/logout), `getProfile()` (calls GET /api/auth/user/profile), `isAuthenticated()` (checks session), storing auth state in service
+- [x] T016 [P] Create frontend OAuthService in `frontend/src/app/auth/services/oauth.service.ts` with: `initiateGoogleLogin()` (redirects to GET /api/auth/login), handles OAuth callback, manages redirect URIs
+- [x] T017 Create frontend auth HTTP interceptor in `frontend/src/app/auth/interceptors/auth.interceptor.ts` implementing `HttpInterceptor` with: automatic credential attachment (`withCredentials: true`), 401 response handling (redirect to login), token refresh retry logic if needed
+- [x] T018 Create frontend auth route guard in `frontend/src/app/auth/guards/auth.guard.ts` implementing `CanActivate` to: check authentication state via AuthService, redirect to login if unauthenticated, allow navigation if authenticated
+- [x] T019 Verify Spring Security OAuth2 Client autoconfigures token refresh in `backend/src/main/java/com/example/inventory/config/SecurityConfig.java`:
   - Review Spring Security OAuth2 Client documentation to confirm token refresh is enabled by default
   - Verify that expired access tokens are automatically refreshed via the token endpoint
   - Write integration test: create OAuth2 session, simulate token expiry, make API request, verify no re-authentication required (token silently refreshed per FR-010)
@@ -73,26 +73,26 @@
 
 ### Implementation for User Story 1
 
-- [ ] T020 Create AuthController in `backend/src/main/java/com/example/inventory/controller/AuthController.java` with endpoints:
+- [x] T020 Create AuthController in `backend/src/main/java/com/example/inventory/controller/AuthController.java` with endpoints:
   - `GET /api/auth/login` → initiates OAuth2 flow (handled by Spring Security)
   - `POST /api/auth/logout` → calls AuthService.logoutUser(), returns `{ "status": "logged_out" }`
   - `GET /api/auth/user/profile` → calls AuthService.getUserProfile(), returns UserProfileResponseDTO (requires @PreAuthorize("isAuthenticated()"))
   - All endpoints return consistent error responses via ExceptionHandler
-- [ ] T021 [P] Create frontend Login component in `frontend/src/app/auth/components/login/login.component.ts` with:
+- [x] T021 [P] Create frontend Login component in `frontend/src/app/auth/components/login/login.component.ts` with:
   - Displays "Login with Google" button
   - On click: calls OAuthService.initiateGoogleLogin()
   - On OAuth callback: calls AuthService.login(), stores session state, navigates to homepage
   - Displays error message if OAuth fails
-- [ ] T022 [P] Create frontend Login component template `frontend/src/app/auth/components/login/login.component.html` with login UI per design
-- [ ] T023 Create frontend Logout component in `frontend/src/app/auth/components/logout/logout.component.ts` with:
+- [x] T022 [P] Create frontend Login component template `frontend/src/app/auth/components/login/login.component.html` with login UI per design
+- [x] T023 Create frontend Logout component in `frontend/src/app/auth/components/logout/logout.component.ts` with:
   - Logout button/link (shown when authenticated)
   - On click: calls AuthService.logout()
   - Clears session state
   - Redirects to login page
-- [ ] T024 [P] Create frontend ProfileService in `frontend/src/app/auth/services/profile.service.ts` with:
+- [x] T024 [P] Create frontend ProfileService in `frontend/src/app/auth/services/profile.service.ts` with:
   - `getProfile()` → calls AuthService.getProfile(), caches result
   - `displayProfile()` → used by components to show user name, email, avatar
-- [ ] T025 Create frontend User model in `frontend/src/app/auth/models/user.model.ts` with TypeScript interface matching UserProfileResponseDTO
+- [x] T025 Create frontend User model in `frontend/src/app/auth/models/user.model.ts` with TypeScript interface matching UserProfileResponseDTO
 - [ ] T026 [P] Update frontend app routing to include:
   - `/login` → LoginComponent (unauthenticated)
   - `/home` → protected by AuthGuard (requires authentication)
@@ -111,13 +111,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Update CustomOAuth2UserService (T011) to verify deduplication logic in `loadUser()`: lookup by (provider, providerUserId), if found return existing user, log reuse event, if not found create new (already done in T011 but verify/test)
-- [ ] T029 [US2] Add deduplication test query to quickstart.md to check database for exact user count after return login
-- [ ] T030 [P] [US2] Update AuthService (T014) to add `verifyUserExists()` method that checks UserRepository for existing user, logs reuse event with timestamp
-- [ ] T031 [US2] Update CustomOAuth2UserService (T011) to call AuthService.verifyUserExists() on return login, ensuring reuse is logged
-- [ ] T032 [US2] Add performance logging to AuthService for login flow timing (start → end), verify <10 second target per SC-002
-- [ ] T033 [P] [US2] Update frontend AuthService (T015) to handle returning user flow: detect existing session on page load, skip login if session valid, show profile immediately
-- [ ] T034 Verify User Story 2 against quickstart.md Scenario 2 (Returning User Login) and deduplication verification
+- [x] T028 [US2] Update CustomOAuth2UserService (T011) to verify deduplication logic in `loadUser()`: lookup by (provider, providerUserId), if found return existing user, log reuse event, if not found create new (already done in T011 but verify/test)
+- [x] T029 [US2] Add deduplication test query to quickstart.md to check database for exact user count after return login
+- [x] T030 [P] [US2] Update AuthService (T014) to add `verifyUserExists()` method that checks UserRepository for existing user, logs reuse event with timestamp
+- [x] T031 [US2] Update CustomOAuth2UserService (T011) to call AuthService.verifyUserExists() on return login, ensuring reuse is logged
+- [x] T032 [US2] Add performance logging to AuthService for login flow timing (start → end), verify <10 second target per SC-002
+- [x] T033 [P] [US2] Update frontend AuthService (T015) to handle returning user flow: detect existing session on page load, skip login if session valid, show profile immediately
+- [x] T034 Verify User Story 2 against quickstart.md Scenario 2 (Returning User Login) and deduplication verification
 
 **Checkpoint**: User Story 2 complete. Returning users are recognized, no duplicates created, performance targets met.
 
@@ -131,35 +131,35 @@
 
 ### Implementation for User Story 3
 
-- [ ] T035 [P] [US3] Update AuthController (T019) POST /api/auth/logout to:
+- [x] T035 [P] [US3] Update AuthController (T019) POST /api/auth/logout to:
   - Validate user is authenticated
   - Call AuthService.logoutUser()
   - Invalidate Spring Session
   - Clear HTTP-only session cookie
   - Log logout event with user ID and timestamp
   - Return 200 OK with `{ "status": "logged_out" }`
-- [ ] T036 [P] [US3] Update AuthService (T014) with `logoutUser()` implementation:
+- [x] T036 [P] [US3] Update AuthService (T014) with `logoutUser()` implementation:
   - Get current user ID
   - Invalidate session via Spring Session API
   - Log "User logged out" event
   - No errors if already logged out (idempotent)
-- [ ] T037 [US3] Update Logout component (T022) to handle logout response:
+- [x] T037 [US3] Update Logout component (T022) to handle logout response:
   - Disable logout button during logout processing
   - Show confirmation message on success
   - Show error message if logout fails
   - Clear local auth state
   - Navigate to login page
-- [ ] T038 [P] [US3] Update auth HTTP interceptor (T017) to handle 401 responses:
+- [x] T038 [P] [US3] Update auth HTTP interceptor (T017) to handle 401 responses:
   - On 401 Unauthorized: clear local auth state, redirect to login page
   - Prevents access to protected endpoints after logout
-- [ ] T039 [P] [US3] Update frontend auth guard (T018) to:
+- [x] T039 [P] [US3] Update frontend auth guard (T018) to:
   - Check AuthService.isAuthenticated()
   - If false: prevent navigation, redirect to login
   - Handles case where session cookie exists but is expired (guards all routes)
-- [ ] T040 Update AuthController (T019) GET /api/auth/user/profile to:
+- [x] T040 Update AuthController (T019) GET /api/auth/user/profile to:
   - Require @PreAuthorize("isAuthenticated()")
   - Return 401 Unauthorized if not authenticated (already via decorator, but verify)
-- [ ] T041 Verify User Story 3 against quickstart.md Scenario 4 (Logout)
+- [x] T041 Verify User Story 3 against quickstart.md Scenario 4 (Logout)
 
 **Checkpoint**: User Story 3 complete. Logout works, sessions terminated, protected endpoints enforced.
 
@@ -173,30 +173,30 @@
 
 ### Implementation for User Story 4
 
-- [ ] T042 [P] [US4] Update frontend AuthService (T015) with `checkSessionOnLoad()` method:
+- [x] T042 [P] [US4] Update frontend AuthService (T015) with `checkSessionOnLoad()` method:
   - Called on app initialization (app.component.ts)
   - Calls GET /api/auth/user/profile to validate session
   - If 200: sets authenticated state, loads profile
   - If 401: sets unauthenticated state, redirects to login
   - Enables session restoration across page refresh
-- [ ] T043 [US4] Update frontend app component (`frontend/src/app/app.component.ts`) to:
+- [x] T043 [US4] Update frontend app component (`frontend/src/app/app.component.ts`) to:
   - Call AuthService.checkSessionOnLoad() on ngOnInit
   - Wait for session check before rendering main app
   - Show loading spinner during check
   - Redirect to login if no session (or show login screen)
-- [ ] T044 [P] [US4] Configure Spring Session to use in-memory store (or database-backed if preferred):
+- [x] T044 [P] [US4] Configure Spring Session to use in-memory store (or database-backed if preferred):
   - Update `application.yml` session store-type: none (in-memory) or jdbc (database)
   - Verify session persists across requests (already configured in T012, verify)
   - 12-hour absolute timeout enforced
-- [ ] T045 [US4] Update browser cookie handling in frontend:
+- [x] T045 [US4] Update browser cookie handling in frontend:
   - Verify SESSION cookie is HTTP-only (set by backend, not modifiable by JS)
   - Verify cookie sent with every request (withCredentials: true in interceptor T017)
   - Verify SameSite=Strict flag present (set by backend)
-- [ ] T046 [US4] Add logging to AuthService (T014) for session lifecycle:
+- [x] T046 [US4] Add logging to AuthService (T014) for session lifecycle:
   - Log "Session restored on page refresh" when checkSessionOnLoad succeeds
   - Log "Session invalid, redirect to login" when checkSessionOnLoad fails
   - Include user ID and timestamp
-- [ ] T047 Verify User Story 4 against quickstart.md Scenario 3 (Session Persistence Across Page Refresh)
+- [x] T047 Verify User Story 4 against quickstart.md Scenario 3 (Session Persistence Across Page Refresh)
 
 **Checkpoint**: User Story 4 complete. Session persists across page refreshes, user remains authenticated.
 
@@ -210,36 +210,36 @@
 
 ### Implementation for User Story 5
 
-- [ ] T048 [P] [US5] Update AuthController (T019) GET /api/auth/user/profile implementation:
+- [x] T048 [P] [US5] Update AuthController (T019) GET /api/auth/user/profile implementation:
   - Get current authenticated user via Spring Security Principal
   - Call AuthService.getUserProfile(userId)
   - Return UserProfileResponseDTO with all fields: id, provider, email, displayName, avatarUrl
   - Handle null/missing optional fields (return null or omit per contract)
   - Log profile retrieval event with user ID
-- [ ] T049 [P] [US5] Update AuthService (T014) with `getUserProfile(userId)` implementation:
+- [x] T049 [P] [US5] Update AuthService (T014) with `getUserProfile(userId)` implementation:
   - Fetch User from UserRepository by id
   - Convert to UserProfileResponseDTO
   - Handle User not found (return empty or 404)
   - Log retrieval with timestamp
   - Target response time <200ms per SC-008
-- [ ] T050 [US5] Verify UserProfileResponseDTO (T010) includes all fields:
+- [x] T050 [US5] Verify UserProfileResponseDTO (T010) includes all fields:
   - id (Long)
   - provider (String)
   - email (String, nullable)
   - displayName (String, nullable)
   - avatarUrl (String, nullable)
-- [ ] T051 [P] [US5] Create frontend ProfileComponent in `frontend/src/app/auth/components/profile/profile.component.ts` to:
+- [x] T051 [P] [US5] Create frontend ProfileComponent in `frontend/src/app/auth/components/profile/profile.component.ts` to:
   - Call ProfileService.getProfile() on load
   - Display user profile data (name, email, avatar)
   - Handle missing optional fields gracefully
-- [ ] T052 [P] [US5] Create frontend ProfileComponent template `frontend/src/app/auth/components/profile/profile.component.html` with profile UI (name, email, avatar image)
-- [ ] T053 [US5] Update frontend ProfileService (T023) to:
+- [x] T052 [P] [US5] Create frontend ProfileComponent template `frontend/src/app/auth/components/profile/profile.component.html` with profile UI (name, email, avatar image)
+- [x] T053 [US5] Update frontend ProfileService (T023) to:
   - Fetch profile via AuthService.getProfile()
   - Cache result (avoid repeated fetches)
   - Handle null/missing fields
   - Return Observable<UserProfile> for component subscription
-- [ ] T054 [US5] Add performance test to verify profile endpoint response time <200ms per SC-008
-- [ ] T055 Verify User Story 5 against quickstart.md Scenario 5 (Profile Data Retrieval)
+- [x] T054 [US5] Add performance test to verify profile endpoint response time <200ms per SC-008
+- [x] T055 Verify User Story 5 against quickstart.md Scenario 5 (Profile Data Retrieval)
 
 **Checkpoint**: User Story 5 complete. Profile endpoint returns all persisted OAuth data.
 
@@ -249,28 +249,28 @@
 
 **Purpose**: Handle OAuth and session edge cases per spec requirements
 
-- [ ] T056 [P] Add error handling for Google OAuth service unreachable:
+- [x] T056 [P] Add error handling for Google OAuth service unreachable:
   - CustomOAuth2UserService catches OAuth2AuthenticationException
   - Returns user-friendly error message "Authentication service unavailable. Please try again."
   - Logged as warning with error details for debugging
-- [ ] T057 [P] Add error handling for OAuth callback failure:
+- [x] T057 [P] Add error handling for OAuth callback failure:
   - AuthController catches failed OAuth flow
   - Redirects to login with error parameter
   - Frontend displays error message
   - Logged as warning with error reason
-- [ ] T058 [P] Add error handling for concurrent first-login attempts (race condition):
+- [x] T058 [P] Add error handling for concurrent first-login attempts (race condition):
   - Database unique constraint on (provider, providerUserId) enforces single record
   - If duplicate insert fails: catch unique constraint exception, fetch existing user, return existing user (idempotent)
   - Log event as "Duplicate login attempt detected, using existing user"
-- [ ] T059 [P] Add error handling for provider data changes (display_name changes):
+- [x] T059 [P] Add error handling for provider data changes (display_name changes):
   - CustomOAuth2UserService updates User.displayName on every login (allows profile updates)
   - Logs "User profile updated: displayName changed"
   - No duplicate creation
-- [ ] T060 [P] Add error handling for private/incognito browsing (session cleared):
+- [x] T060 [P] Add error handling for private/incognito browsing (session cleared):
   - Frontend checkSessionOnLoad (T043) handles 401 response
   - User redirected to login
   - No error on page load
-- [ ] T061 Add error handling for expired session (12-hour timeout):
+- [x] T061 Add error handling for expired session (12-hour timeout):
   - Spring Session automatically invalidates after 12 hours
   - Next request returns 401 Unauthorized
   - Frontend redirects to login
@@ -285,23 +285,23 @@
 
 **Purpose**: Implement comprehensive logging per FR-012 and SC-009
 
-- [ ] T063 [P] Configure SLF4J logger for auth package in `backend/src/main/java/com/example/inventory/service/AuthService.java`:
+- [x] T063 [P] Configure SLF4J logger for auth package in `backend/src/main/java/com/example/inventory/service/AuthService.java`:
   - Log level: INFO for successful events (login, logout, profile retrieval)
   - Log level: WARN for failures (invalid token, expired session, OAuth error)
-- [ ] T064 [P] Add auth event logging in AuthService (T014):
+- [x] T064 [P] Add auth event logging in AuthService (T014):
   - Login event: `logger.info("User login: provider={}, providerUserId={}, timestamp={}", provider, providerUserId, now())`
   - Logout event: `logger.info("User logout: userId={}, timestamp={}", userId, now())`
   - Token refresh event: `logger.info("Session refreshed: userId={}, timestamp={}", userId, now())`
   - Failed login event: `logger.warn("Login failed: reason={}, error={}, timestamp={}", reason, error, now())`
-- [ ] T065 [P] Add auth event logging in CustomOAuth2UserService (T011):
+- [x] T065 [P] Add auth event logging in CustomOAuth2UserService (T011):
   - New user created: `logger.info("New user created: provider={}, providerUserId={}, email={}, timestamp={}", ...)`
   - Existing user reused: `logger.info("Existing user reused: provider={}, providerUserId={}, userId={}, timestamp={}", ...)`
   - OAuth error: `logger.warn("OAuth error: error={}, details={}, timestamp={}", error, details, now())`
-- [ ] T066 [P] Add auth event logging in ExceptionHandler (T013):
+- [x] T066 [P] Add auth event logging in ExceptionHandler (T013):
   - 401 Unauthorized: `logger.warn("Unauthorized access attempt: path={}, ip={}, timestamp={}", path, ip, now())`
   - 500 Server error: `logger.error("Authentication server error: error={}, details={}, timestamp={}", error, stackTrace, now())`
 - [ ] T067 Verify logging implementation against quickstart.md Scenario 7 (Logging & Audit Trail)
-- [ ] T068 [P] Configure logback to output auth logs to file: `backend/logs/auth.log` or application logs (SLF4J default)
+- [x] T068 [P] Configure logback to output auth logs to file: `backend/logs/auth.log` or application logs (SLF4J default)
 
 **Checkpoint**: All authentication events logged with timestamp, user ID, outcome, and error details.
 
@@ -311,34 +311,34 @@
 
 **Purpose**: Performance, security hardening, documentation
 
-- [ ] T069 [P] Add CORS configuration to SecurityConfig (T012):
+- [x] T069 [P] Add CORS configuration to SecurityConfig (T012):
   - Allow origins: http://localhost:4200 (dev), https://yourdomain.com (prod)
   - Allow credentials: true (required for cookies)
   - Allow methods: GET, POST, OPTIONS
   - Allow headers: Content-Type, Authorization
-- [ ] T070 [P] Add CSRF protection to SecurityConfig (T012):
+- [x] T070 [P] Add CSRF protection to SecurityConfig (T012):
   - CSRF enabled for POST endpoints
   - Token endpoint: /api/auth/login (CSRF disabled for OAuth redirect)
   - Other endpoints: /api/auth/logout, GET /api/auth/user/profile (CSRF enabled)
-- [ ] T071 [P] Add HTTP security headers to SecurityConfig (T012):
+- [x] T071 [P] Add HTTP security headers to SecurityConfig (T012):
   - Strict-Transport-Security (HSTS): max-age=31536000 (1 year, HTTPS only)
   - X-Content-Type-Options: nosniff
   - X-Frame-Options: DENY (prevent clickjacking)
-- [ ] T072 [P] Update frontend security:
+- [x] T072 [P] Update frontend security:
   - Add Content Security Policy headers (if applicable)
   - Validate OAuth callback state parameter (already done by Spring Security)
   - Sanitize user profile data (displayName, email) before display
-- [ ] T073 [P] Add performance monitoring:
+- [x] T073 [P] Add performance monitoring:
   - Log login flow timing: start → end per T032
   - Verify <30s first-time login (SC-001)
   - Verify <10s return login (SC-002)
   - Verify <200ms profile endpoint (SC-008)
   - Log slow queries on profile retrieval
-- [ ] T074 [P] Code cleanup:
+- [x] T074 [P] Code cleanup:
   - Remove debug/test code
   - Verify no hardcoded credentials or tokens
   - Check for unused imports and variables
-- [ ] T075 [P] Update documentation:
+- [x] T075 [P] Update documentation:
   - Add deployment guide: env vars for Google OAuth (CLIENT_ID, CLIENT_SECRET)
   - Add troubleshooting guide for common OAuth errors
   - Update README with authentication flow diagram
@@ -346,7 +346,7 @@
   - Execute all 7 validation scenarios
   - Verify each scenario passes independently
   - Document any issues found
-- [ ] T077 Update API documentation (Swagger/OpenAPI if applicable):
+- [x] T077 Update API documentation (Swagger/OpenAPI if applicable):
   - Document /api/auth/login endpoint
   - Document /api/auth/logout endpoint
   - Document /api/auth/user/profile endpoint
