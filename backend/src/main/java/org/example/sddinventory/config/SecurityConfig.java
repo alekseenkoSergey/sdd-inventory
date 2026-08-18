@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOAuth2UserService))
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
             )
             .logout(logout -> logout
                 .logoutUrl("/api/auth/logout")
@@ -45,13 +45,11 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .sessionFixationProtection(org.springframework.security.config.http.SessionFixationProtectionStrategy.MIGRATE_SESSION)
                 .sessionConcurrency(concurrency -> concurrency.maximumSessions(1))
             )
             .headers(headers -> headers
                 .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
-                .xssProtection()
-                .frameOptions(frameOptions -> frameOptions.deny())
+                .frameOptions(frameOptions -> frameOptions.sameOrigin())
             );
 
         return http.build();
