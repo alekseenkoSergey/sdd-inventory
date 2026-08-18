@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger("auth");
 
     @ExceptionHandler(OAuth2AuthenticationException.class)
