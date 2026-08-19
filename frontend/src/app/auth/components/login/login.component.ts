@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from '../../services/oauth.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,13 +10,22 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   errorMessage: string | null = null;
 
   constructor(
     private oAuthService: OAuthService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['error']) {
+        this.errorMessage = params['error_description'] || 'Authentication failed. Please try again.';
+      }
+    });
+  }
 
   loginWithGoogle(): void {
     this.errorMessage = null;

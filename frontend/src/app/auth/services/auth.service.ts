@@ -9,7 +9,7 @@ import { UserProfile } from '../models/user.model';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth';
-  private authenticatedSubject = new BehaviorSubject<boolean>(false);
+  public authenticatedSubject = new BehaviorSubject<boolean>(false);
   public authenticated$ = this.authenticatedSubject.asObservable();
 
   constructor(private http: HttpClient) {}

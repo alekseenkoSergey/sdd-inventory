@@ -340,5 +340,10 @@
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
-
-<router-outlet />
+@if (isLoading()) {
+  <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <p>Loading...</p>
+  </div>
+} @else {
+  <router-outlet />
+}

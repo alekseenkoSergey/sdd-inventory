@@ -38,6 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setDisplayName(displayName);
             user.setEmail(email);
             user.setAvatarUrl(avatarUrl);
+            user = userRepository.save(user);
             logger.info("Existing user reused: provider={}, providerUserId={}, userId={}, timestamp={}",
                 provider, providerUserId, user.getId(), System.currentTimeMillis());
         } else {

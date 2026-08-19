@@ -31,12 +31,15 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/login", "/login/oauth2/code/google").permitAll()
+                .requestMatchers("/api/auth/login", "/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
                 .requestMatchers("/api/auth/**").authenticated()
                 .anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                .failureHandler((request, response, exception) -> {
+                    response.sendRedirect("/login?error=" + exception.getMessage());
+                })
             )
             .logout(logout -> logout
                 .logoutUrl("/api/auth/logout")

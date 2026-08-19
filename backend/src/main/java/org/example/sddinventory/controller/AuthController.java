@@ -25,16 +25,35 @@ public class AuthController {
 
     @GetMapping("/login")
     public ResponseEntity<?> login() {
-        return ResponseEntity.ok().body(Map.of("message", "Redirect to OAuth2 login"));
+        // This endpoint is not directly called by clients. OAuth2 login is initiated via
+        // /oauth2/authorization/google which is handled by Spring Security automatically.
+        // Return 400 if this endpoint is called directly.
+        return ResponseEntity.badRequest().body(Map.of("message", "Use /oauth2/authorization/google to login"));
+    }
+
+    @GetMapping("/error")
+    public ResponseEntity<?> oauthError(String error, String error_description) {
+        logger.warn("OAuth error callback: error={}, description={}, timestamp={}",
+            error, error_description, System.currentTimeMillis());
+        Map<String, String> response = new HashMap<>();
+        response.put("error", error != null ? error : "unknown_error");
+        response.put("message", error_description != null ? error_description : "Authentication failed. Please try again.");
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> logout(Authentication authentication) {
-        authService.logoutUser();
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "logged_out");
-        return ResponseEntity.ok(response);
+        try {
+            authService.logoutUser();
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "logged_out");
+            logger.info("Logout successful at timestamp={}", System.currentTimeMillis());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.warn("Logout error: error={}, timestamp={}", e.getMessage(), System.currentTimeMillis());
+            return ResponseEntity.status(500).body(Map.of("error", "Logout failed"));
+        }
     }
 
     @GetMapping("/user/profile")
@@ -46,7 +65,7 @@ public class AuthController {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String providerUserId = oAuth2User.getAttribute("sub");
-        String provider = "google";
+        String provider = "Google";
 
         Long userId = authService.getUserIdFromAuthentication(provider, providerUserId);
         if (userId == null) {

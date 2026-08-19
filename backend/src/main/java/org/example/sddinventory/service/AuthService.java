@@ -32,9 +32,8 @@ public class AuthService {
             if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
                 org.springframework.security.oauth2.core.user.OAuth2User oAuth2User =
                     (org.springframework.security.oauth2.core.user.OAuth2User) principal;
-                String provider = (String) SecurityContextHolder.getContext().getAuthentication()
-                    .getDetails();
                 String providerUserId = oAuth2User.getAttribute("sub");
+                String provider = "Google";
 
                 Optional<User> user = userRepository.findByProviderAndProviderUserId(provider, providerUserId);
                 return user.orElse(null);

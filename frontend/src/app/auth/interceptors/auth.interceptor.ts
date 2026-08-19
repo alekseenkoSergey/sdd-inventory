@@ -1,38 +1,24 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { catchError, throwError } from 'rxjs';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    request = request.clone({
-      withCredentials: true
-    });
+  req = req.clone({
+    withCredentials: true
+  });
 
-    return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.authService.logout().subscribe(
-            () => this.router.navigate(['/login']),
-            () => this.router.navigate(['/login'])
-          );
-        }
-        return throwError(() => error);
-      })
-    );
-  }
-}
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        authService.authenticatedSubject.next(false);
+        router.navigate(['/login']);
+      }
+      return throwError(() => error);
+    })
+  );
+};
