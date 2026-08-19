@@ -10,15 +10,12 @@ CREATE TABLE category (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     version BIGINT NOT NULL DEFAULT 0,
 
-    -- Composite unique index: case-insensitive name per user
-    CONSTRAINT uk_category_user_name UNIQUE (user_id, LOWER(TRIM(name))),
-
-    -- Name cannot be empty after trimming
-    CONSTRAINT ck_category_name_not_empty CHECK (LENGTH(TRIM(name)) > 0),
-
     -- Foreign key to User table
-    CONSTRAINT fk_category_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE
+    CONSTRAINT fk_category_user FOREIGN KEY (user_id) REFERENCES "users"(id) ON DELETE CASCADE
 );
+
+-- Composite unique index: case-insensitive name per user
+CREATE UNIQUE INDEX uk_category_user_name ON category(user_id, LOWER(TRIM(name)));
 
 -- Index for common queries
 CREATE INDEX idx_category_user_id ON category(user_id);

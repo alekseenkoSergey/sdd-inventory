@@ -1,5 +1,6 @@
 package org.example.sddinventory.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.sddinventory.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,6 +58,11 @@ public class SecurityConfig {
             );
 
         return http.build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean

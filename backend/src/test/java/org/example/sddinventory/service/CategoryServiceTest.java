@@ -45,7 +45,7 @@ public class CategoryServiceTest {
         Category category = new Category(userId, "Electronics");
         category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, "Electronics");
 
@@ -74,7 +74,7 @@ public class CategoryServiceTest {
         Category category = new Category(userId, "Electronics");
         category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         categoryService.createCategory(userId, "  Electronics  ");
 

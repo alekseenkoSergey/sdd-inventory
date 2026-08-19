@@ -85,8 +85,8 @@ public class CategoryServiceDeleteTest {
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
         when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
-        when(categoryRepository.deleteByIdAndUserId(categoryId, userId))
-            .thenThrow(new org.springframework.orm.ObjectOptimisticLockingFailureException("Version conflict", null));
+        doThrow(new org.springframework.orm.ObjectOptimisticLockingFailureException("Version conflict", null))
+            .when(categoryRepository).deleteByIdAndUserId(categoryId, userId);
 
         assertThrows(org.springframework.orm.ObjectOptimisticLockingFailureException.class,
             () -> categoryService.deleteCategory(userId, categoryId));

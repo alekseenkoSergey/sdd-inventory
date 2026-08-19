@@ -36,13 +36,13 @@ public class CategoryServiceEdgeCasesTest {
 
     @Test
     public void testEmptyNameAfterTrimming() {
-        when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, ""))
+        lenient().when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, ""))
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, "");
         category.setId(1L);
-        when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        lenient().when(categoryRepository.save(any())).thenReturn(category);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, "   ");
         assertEquals("", result.getName());
@@ -51,13 +51,13 @@ public class CategoryServiceEdgeCasesTest {
     @Test
     public void testVeryLongCategoryName() {
         String longName = "A".repeat(255);
-        when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, longName))
+        lenient().when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, longName))
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, longName);
         category.setId(1L);
-        when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        lenient().when(categoryRepository.save(any())).thenReturn(category);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, longName);
         assertEquals(255, result.getName().length());
@@ -66,13 +66,13 @@ public class CategoryServiceEdgeCasesTest {
     @Test
     public void testSpecialCharactersInName() {
         String specialName = "Electronics & Tools (2024)";
-        when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, specialName))
+        lenient().when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, specialName))
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, specialName);
         category.setId(1L);
-        when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        lenient().when(categoryRepository.save(any())).thenReturn(category);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, specialName);
         assertEquals(specialName, result.getName());
@@ -80,7 +80,7 @@ public class CategoryServiceEdgeCasesTest {
 
     @Test
     public void testCaseInsensitiveUniqueness() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "ELECTRONICS");
         existing.setId(categoryId);
 
@@ -93,13 +93,13 @@ public class CategoryServiceEdgeCasesTest {
 
     @Test
     public void testMixedCaseAndWhitespace() {
-        when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, "Electronics"))
+        lenient().when(categoryRepository.findByUserIdAndNameIgnoreCase(userId, "ElEcTrOnIcS"))
             .thenReturn(Optional.empty());
 
-        Category category = new Category(userId, "Electronics");
-        category.setId(UUID.randomUUID());
-        when(categoryRepository.save(any())).thenReturn(category);
-        when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
+        Category category = new Category(userId, "ElEcTrOnIcS");
+        category.setId(1L);
+        lenient().when(categoryRepository.save(any())).thenReturn(category);
+        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
 
         categoryService.createCategory(userId, "  ElEcTrOnIcS  ");
 
