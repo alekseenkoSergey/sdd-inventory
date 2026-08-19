@@ -1,5 +1,8 @@
 package org.example.sddinventory.config;
 
+import org.example.sddinventory.exception.CategoryHasItemsException;
+import org.example.sddinventory.exception.CategoryNameNotUniqueException;
+import org.example.sddinventory.exception.CategoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,49 @@ public class GlobalExceptionHandler {
         body.put("path", request.getDescription(false).replace("uri=", ""));
 
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CategoryNameNotUniqueException.class)
+    public ResponseEntity<?> handleCategoryNameNotUniqueException(CategoryNameNotUniqueException ex, WebRequest request) {
+        logger.warn("Category name not unique: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "CATEGORY_NAME_NOT_UNIQUE");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CategoryHasItemsException.class)
+    public ResponseEntity<?> handleCategoryHasItemsException(CategoryHasItemsException ex, WebRequest request) {
+        logger.warn("Cannot delete category with items: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", "CATEGORY_HAS_ITEMS");
+        body.put("message", ex.getMessage());
+        body.put("itemCount", ex.getItemCount());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<?> handleCategoryNotFoundException(CategoryNotFoundException ex, WebRequest request) {
+        logger.warn("Category not found: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "CATEGORY_NOT_FOUND");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

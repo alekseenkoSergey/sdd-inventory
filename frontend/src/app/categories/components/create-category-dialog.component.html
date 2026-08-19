@@ -1,0 +1,30 @@
+<div class="dialog-container">
+  <h3>Create New Category</h3>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="categoryName">Category Name</label>
+      <input
+        id="categoryName"
+        [(ngModel)]="categoryName"
+        name="categoryName"
+        type="text"
+        placeholder="Enter category name"
+        [disabled]="loading"
+      />
+    </div>
+
+    <div class="button-group">
+      <button type="submit" [disabled]="loading || !categoryName.trim()" class="btn-create">
+        {{ loading ? 'Creating...' : 'Create' }}
+      </button>
+      <button type="button" (click)="onCancel()" [disabled]="loading" class="btn-cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

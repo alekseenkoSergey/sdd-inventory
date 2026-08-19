@@ -1,0 +1,30 @@
+<div class="dialog-container">
+  <h3>Rename Category</h3>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="newName">New Name</label>
+      <input
+        id="newName"
+        [(ngModel)]="newName"
+        name="newName"
+        type="text"
+        placeholder="Enter new category name"
+        [disabled]="loading"
+      />
+    </div>
+
+    <div class="button-group">
+      <button type="submit" [disabled]="loading || !newName.trim()" class="btn-rename">
+        {{ loading ? 'Renaming...' : 'Rename' }}
+      </button>
+      <button type="button" (click)="onCancel()" [disabled]="loading" class="btn-cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
