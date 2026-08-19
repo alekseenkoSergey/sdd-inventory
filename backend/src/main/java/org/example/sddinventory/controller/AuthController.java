@@ -1,5 +1,6 @@
 package org.example.sddinventory.controller;
 
+import org.example.sddinventory.entity.User;
 import org.example.sddinventory.model.UserProfileResponseDTO;
 import org.example.sddinventory.service.AuthService;
 import org.slf4j.Logger;
@@ -24,11 +25,54 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<?> login() {
-        // This endpoint is not directly called by clients. OAuth2 login is initiated via
-        // /oauth2/authorization/google which is handled by Spring Security automatically.
-        // Return 400 if this endpoint is called directly.
-        return ResponseEntity.badRequest().body(Map.of("message", "Use /oauth2/authorization/google to login"));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> login(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String providerUserId = oAuth2User.getAttribute("sub");
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        String picture = oAuth2User.getAttribute("picture");
+        String provider = "Google";
+
+        User user = authService.createOrGetUser(provider, providerUserId, email, name, picture);
+        UserProfileResponseDTO profile = authService.getUserProfile(user.getId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "authenticated");
+        response.put("user", profile);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/callback")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> oauthCallback(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String providerUserId = oAuth2User.getAttribute("sub");
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        String picture = oAuth2User.getAttribute("picture");
+        String provider = "Google";
+
+        User user = authService.createOrGetUser(provider, providerUserId, email, name, picture);
+
+        logger.info("OAuth2 callback processed: userId={}, email={}, provider={}, timestamp={}",
+            user.getId(), email, provider, System.currentTimeMillis());
+
+        UserProfileResponseDTO profile = authService.getUserProfile(user.getId());
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "authenticated");
+        response.put("user", profile);
+        response.put("isNewUser", false);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/error")
@@ -65,20 +109,30 @@ public class AuthController {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String providerUserId = oAuth2User.getAttribute("sub");
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        String picture = oAuth2User.getAttribute("picture");
         String provider = "Google";
 
-        Long userId = authService.getUserIdFromAuthentication(provider, providerUserId);
-        if (userId == null) {
-            logger.warn("User not found in profile endpoint: provider={}, providerUserId={}, timestamp={}",
-                provider, providerUserId, System.currentTimeMillis());
-            return ResponseEntity.status(401).body(Map.of("error", "User not found"));
-        }
+        User user = authService.createOrGetUser(provider, providerUserId, email, name, picture);
 
-        UserProfileResponseDTO profile = authService.getUserProfile(userId);
+        UserProfileResponseDTO profile = authService.getUserProfile(user.getId());
         if (profile == null) {
             return ResponseEntity.status(404).body(Map.of("error", "Profile not found"));
         }
 
         return ResponseEntity.ok(profile);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuthStatus() {
+        if (authService.isAuthenticated()) {
+            User currentUser = authService.getCurrentUser();
+            if (currentUser != null) {
+                UserProfileResponseDTO profile = authService.getUserProfile(currentUser.getId());
+                return ResponseEntity.ok(profile);
+            }
+        }
+        return ResponseEntity.status(401).body(Map.of("status", "not_authenticated"));
     }
 }

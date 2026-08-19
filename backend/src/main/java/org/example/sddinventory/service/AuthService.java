@@ -102,4 +102,39 @@ public class AuthService {
         Optional<User> user = userRepository.findByProviderAndProviderUserId(provider, providerUserId);
         return user.map(User::getId).orElse(null);
     }
+
+    public User createOrGetUser(String provider, String providerUserId, String email, String displayName, String avatarUrl) {
+        Optional<User> existingUser = userRepository.findByProviderAndProviderUserId(provider, providerUserId);
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            boolean updated = false;
+
+            if (email != null && !email.equals(user.getEmail())) {
+                user.setEmail(email);
+                updated = true;
+            }
+            if (displayName != null && !displayName.equals(user.getDisplayName())) {
+                user.setDisplayName(displayName);
+                updated = true;
+            }
+            if (avatarUrl != null && !avatarUrl.equals(user.getAvatarUrl())) {
+                user.setAvatarUrl(avatarUrl);
+                updated = true;
+            }
+
+            if (updated) {
+                user = userRepository.save(user);
+                logger.info("User updated: userId={}, email={}, provider={}, timestamp={}",
+                    user.getId(), email, provider, System.currentTimeMillis());
+            }
+            return user;
+        }
+
+        User newUser = new User(provider, providerUserId, email, displayName, avatarUrl);
+        newUser = userRepository.save(newUser);
+        logger.info("New user created: userId={}, email={}, provider={}, providerUserId={}, timestamp={}",
+            newUser.getId(), email, provider, providerUserId, System.currentTimeMillis());
+        return newUser;
+    }
 }

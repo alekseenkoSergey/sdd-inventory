@@ -37,7 +37,7 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                .defaultSuccessUrl("http://localhost:4200/dashboard", true)
+                .defaultSuccessUrl("http://localhost:4200/auth/callback", true)
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("http://localhost:4200/login?error=" + exception.getMessage());
                 })
