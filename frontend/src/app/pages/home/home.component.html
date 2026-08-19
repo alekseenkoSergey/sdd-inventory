@@ -14,7 +14,8 @@
 
   <main class="home-main">
     <div class="welcome-section">
-      @if (userProfile$ | async as profile) {
+      @let profile = (userProfile$ | async);
+      @if (profile) {
         <div class="user-welcome">
           @if (profile?.avatarUrl) {
             <img [src]="profile.avatarUrl" [alt]="profile.displayName || 'User'" class="avatar" />
