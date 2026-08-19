@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category.model';
@@ -19,7 +19,7 @@ export class CategoryListComponent implements OnInit {
 
   @Output() renameRequested = new EventEmitter<{id: number, name: string}>();
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -33,11 +33,13 @@ export class CategoryListComponent implements OnInit {
         console.log('Categories loaded:', data);
         this.categories = data;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load categories:', err);
         this.error = 'Failed to load categories: ' + (err.error?.message || err.message || 'Unknown error');
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -53,6 +55,7 @@ export class CategoryListComponent implements OnInit {
         next: () => {
           this.deleting[id] = false;
           this.successMessage = `Category "${name}" deleted successfully`;
+          this.cdr.markForCheck();
           this.loadCategories();
         },
         error: (err) => {
@@ -64,6 +67,7 @@ export class CategoryListComponent implements OnInit {
             this.error = 'Failed to delete category';
           }
           console.error(err);
+          this.cdr.markForCheck();
         }
       });
     }
