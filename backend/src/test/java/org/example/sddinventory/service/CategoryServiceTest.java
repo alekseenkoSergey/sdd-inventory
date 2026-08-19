@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -30,12 +29,12 @@ public class CategoryServiceTest {
     @Mock
     private ItemService itemService;
 
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     public void setUp() {
         categoryService = new CategoryService(categoryRepository, itemService);
-        userId = UUID.randomUUID();
+        userId = 1L;
     }
 
     @Test
@@ -44,7 +43,7 @@ public class CategoryServiceTest {
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, "Electronics");
-        category.setId(UUID.randomUUID());
+        category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
         when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
 
@@ -73,7 +72,7 @@ public class CategoryServiceTest {
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, "Electronics");
-        category.setId(UUID.randomUUID());
+        category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
         when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
 
@@ -84,7 +83,7 @@ public class CategoryServiceTest {
 
     @Test
     public void testRenameCategorySuccess() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
 
@@ -107,7 +106,7 @@ public class CategoryServiceTest {
 
     @Test
     public void testRenameCategoryToExistingName() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
         Category duplicate = new Category(userId, "Tools");
@@ -123,7 +122,7 @@ public class CategoryServiceTest {
 
     @Test
     public void testDeleteCategorySuccess() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category category = new Category(userId, "Electronics");
         category.setId(categoryId);
 
@@ -138,7 +137,7 @@ public class CategoryServiceTest {
 
     @Test
     public void testDeleteCategoryWithItemsBlocked() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category category = new Category(userId, "Electronics");
         category.setId(categoryId);
 
@@ -154,8 +153,8 @@ public class CategoryServiceTest {
 
     @Test
     public void testUserIsolationEnforced() {
-        UUID categoryId = UUID.randomUUID();
-        UUID otherUserId = UUID.randomUUID();
+        Long categoryId = 1L;
+        Long otherUserId = 2L;
 
         when(categoryRepository.findByIdAndUserId(categoryId, otherUserId))
             .thenReturn(Optional.empty());

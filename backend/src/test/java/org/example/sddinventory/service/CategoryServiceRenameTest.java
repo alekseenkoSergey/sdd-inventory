@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -29,17 +28,17 @@ public class CategoryServiceRenameTest {
     @Mock
     private ItemService itemService;
 
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     public void setUp() {
         categoryService = new CategoryService(categoryRepository, itemService);
-        userId = UUID.randomUUID();
+        userId = 1L;
     }
 
     @Test
     public void testRenameCategoryWithUniquenesCheck() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
 
@@ -61,7 +60,7 @@ public class CategoryServiceRenameTest {
 
     @Test
     public void testVersionConflictOnRename() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
         existing.setVersion(1L);
@@ -79,7 +78,7 @@ public class CategoryServiceRenameTest {
 
     @Test
     public void testRenameToDuplicateName() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
         Category duplicate = new Category(userId, "Tools");
@@ -95,7 +94,7 @@ public class CategoryServiceRenameTest {
 
     @Test
     public void testRenameConcurrentEdit() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category existing = new Category(userId, "Electronics");
         existing.setId(categoryId);
 

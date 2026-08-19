@@ -1,10 +1,9 @@
 package org.example.sddinventory.model;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class CategoryResponseDTO {
-    private UUID id;
+    private Long id;
     private String name;
     private int itemCount;
     private LocalDateTime createdAt;
@@ -13,7 +12,7 @@ public class CategoryResponseDTO {
     public CategoryResponseDTO() {
     }
 
-    public CategoryResponseDTO(UUID id, String name, int itemCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CategoryResponseDTO(Long id, String name, int itemCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.itemCount = itemCount;
@@ -21,11 +20,11 @@ public class CategoryResponseDTO {
         this.updatedAt = updatedAt;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

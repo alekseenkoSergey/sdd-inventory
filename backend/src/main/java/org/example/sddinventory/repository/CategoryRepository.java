@@ -6,17 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, UUID> {
-    List<Category> findAllByUserId(UUID userId);
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findAllByUserId(Long userId);
 
-    Optional<Category> findByIdAndUserId(UUID id, UUID userId);
+    Optional<Category> findByIdAndUserId(Long id, Long userId);
 
-    Optional<Category> findByUserIdAndNameIgnoreCase(UUID userId, String name);
+    Optional<Category> findByUserIdAndNameIgnoreCase(Long userId, String name);
 
-    void deleteByIdAndUserId(UUID id, UUID userId);
+    void deleteByIdAndUserId(Long id, Long userId);
 
-    boolean existsByIdAndUserId(UUID id, UUID userId);
+    boolean existsByIdAndUserId(Long id, Long userId);
 }

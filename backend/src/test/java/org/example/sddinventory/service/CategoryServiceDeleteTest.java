@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,17 +25,17 @@ public class CategoryServiceDeleteTest {
     @Mock
     private ItemService itemService;
 
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     public void setUp() {
         categoryService = new CategoryService(categoryRepository, itemService);
-        userId = UUID.randomUUID();
+        userId = 1L;
     }
 
     @Test
     public void testDeletionWithItemsCheck() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category category = new Category(userId, "Electronics");
         category.setId(categoryId);
 
@@ -52,7 +51,7 @@ public class CategoryServiceDeleteTest {
 
     @Test
     public void testSuccessfulEmptyCategoryDeletion() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category category = new Category(userId, "Electronics");
         category.setId(categoryId);
 
@@ -67,7 +66,7 @@ public class CategoryServiceDeleteTest {
 
     @Test
     public void testDeleteNonExistentCategory() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.empty());
@@ -78,7 +77,7 @@ public class CategoryServiceDeleteTest {
 
     @Test
     public void testDeleteWithVersionConflict() {
-        UUID categoryId = UUID.randomUUID();
+        Long categoryId = 1L;
         Category category = new Category(userId, "Electronics");
         category.setId(categoryId);
         category.setVersion(2L);

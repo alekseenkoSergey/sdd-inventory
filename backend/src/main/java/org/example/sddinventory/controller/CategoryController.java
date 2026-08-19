@@ -1,8 +1,10 @@
 package org.example.sddinventory.controller;
 
+import org.example.sddinventory.entity.User;
 import org.example.sddinventory.model.CategoryResponseDTO;
 import org.example.sddinventory.model.CreateCategoryRequestDTO;
 import org.example.sddinventory.model.RenameCategoryRequestDTO;
+import org.example.sddinventory.service.AuthService;
 import org.example.sddinventory.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,58 +14,59 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categories")
 @Validated
 public class CategoryController {
     private final CategoryService categoryService;
+    private final AuthService authService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, AuthService authService) {
         this.categoryService = categoryService;
+        this.authService = authService;
     }
 
     @PostMapping
     public ResponseEntity<CategoryResponseDTO> createCategory(
         @Valid @RequestBody CreateCategoryRequestDTO request,
         Authentication authentication) {
-        UUID userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         CategoryResponseDTO category = categoryService.createCategory(userId, request.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> listCategories(Authentication authentication) {
-        UUID userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         List<CategoryResponseDTO> categories = categoryService.listCategories(userId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> getCategory(
-        @PathVariable UUID categoryId,
+        @PathVariable Long categoryId,
         Authentication authentication) {
-        UUID userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         CategoryResponseDTO category = categoryService.getCategory(userId, categoryId);
         return ResponseEntity.ok(category);
     }
 
     @PatchMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> renameCategory(
-        @PathVariable UUID categoryId,
+        @PathVariable Long categoryId,
         @Valid @RequestBody RenameCategoryRequestDTO request,
         Authentication authentication) {
-        UUID userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         CategoryResponseDTO category = categoryService.renameCategory(userId, categoryId, request.getName());
         return ResponseEntity.ok(category);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
-        @PathVariable UUID categoryId,
+        @PathVariable Long categoryId,
         Authentication authentication) {
-        UUID userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         categoryService.deleteCategory(userId, categoryId);
         return ResponseEntity.noContent().build();
     }
@@ -73,9 +76,11 @@ public class CategoryController {
         return ResponseEntity.status(org.springframework.http.HttpStatus.CONFLICT).build();
     }
 
-    private UUID extractUserId(Authentication authentication) {
-        // TODO: Extract actual userId from JWT token
-        // For now, using a placeholder
-        return UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private Long extractUserId(Authentication authentication) {
+        User currentUser = authService.getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("User not authenticated");
+        }
+        return currentUser.getId();
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +27,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponseDTO createCategory(UUID userId, String name) {
+    public CategoryResponseDTO createCategory(Long userId, String name) {
         String trimmedName = name.trim();
         logger.debug("Creating category: userId={}, name={}", userId, trimmedName);
 
@@ -45,7 +44,7 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponseDTO> listCategories(UUID userId) {
+    public List<CategoryResponseDTO> listCategories(Long userId) {
         return categoryRepository.findAllByUserId(userId).stream()
             .map(cat -> {
                 int itemCount = itemService.countItemsByCategory(cat.getId());
@@ -55,7 +54,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponseDTO renameCategory(UUID userId, UUID categoryId, String newName) {
+    public CategoryResponseDTO renameCategory(Long userId, Long categoryId, String newName) {
         String trimmedName = newName.trim();
 
         Category category = categoryRepository.findByIdAndUserId(categoryId, userId)
@@ -80,7 +79,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(UUID userId, UUID categoryId) {
+    public void deleteCategory(Long userId, Long categoryId) {
         logger.debug("Deleting category: userId={}, categoryId={}", userId, categoryId);
 
         Category category = categoryRepository.findByIdAndUserId(categoryId, userId)
@@ -100,7 +99,7 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public CategoryResponseDTO getCategory(UUID userId, UUID categoryId) {
+    public CategoryResponseDTO getCategory(Long userId, Long categoryId) {
         Category category = categoryRepository.findByIdAndUserId(categoryId, userId)
             .orElseThrow(() -> {
                 logger.warn("Attempt to retrieve non-existent category: userId={}, categoryId={}", userId, categoryId);

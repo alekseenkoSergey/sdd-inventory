@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -27,12 +26,12 @@ public class CategoryServiceEdgeCasesTest {
     @Mock
     private ItemService itemService;
 
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     public void setUp() {
         categoryService = new CategoryService(categoryRepository, itemService);
-        userId = UUID.randomUUID();
+        userId = 1L;
     }
 
     @Test
@@ -41,7 +40,7 @@ public class CategoryServiceEdgeCasesTest {
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, "");
-        category.setId(UUID.randomUUID());
+        category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
         when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
 
@@ -56,7 +55,7 @@ public class CategoryServiceEdgeCasesTest {
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, longName);
-        category.setId(UUID.randomUUID());
+        category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
         when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
 
@@ -71,7 +70,7 @@ public class CategoryServiceEdgeCasesTest {
             .thenReturn(Optional.empty());
 
         Category category = new Category(userId, specialName);
-        category.setId(UUID.randomUUID());
+        category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
         when(itemService.countItemsByCategory(category.getId())).thenReturn(0);
 

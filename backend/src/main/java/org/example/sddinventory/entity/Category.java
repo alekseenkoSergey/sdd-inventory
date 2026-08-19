@@ -2,7 +2,6 @@ package org.example.sddinventory.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "category", uniqueConstraints = {
@@ -10,11 +9,11 @@ import java.util.UUID;
 })
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    private Long userId;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
@@ -32,7 +31,7 @@ public class Category {
     public Category() {
     }
 
-    public Category(UUID userId, String name) {
+    public Category(Long userId, String name) {
         this.userId = userId;
         this.name = name;
         this.createdAt = LocalDateTime.now();
@@ -40,19 +39,19 @@ public class Category {
         this.version = 0L;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

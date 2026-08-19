@@ -15,8 +15,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.UUID;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,12 +31,12 @@ public class CategoryIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     public void setUp() {
         categoryRepository.deleteAll();
-        userId = UUID.randomUUID();
+        userId = 1L;
     }
 
     @Test
