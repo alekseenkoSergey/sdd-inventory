@@ -33,7 +33,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/oauth2/**", "/login/**", "/api/**"))
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/login", "/oauth2/**", "/login/**").permitAll()
-                .requestMatchers("/api/auth/**").authenticated()
+                .requestMatchers("/api/auth/**", "/api/categories/**").authenticated()
                 .anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2

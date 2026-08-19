@@ -11,7 +11,7 @@ import { CategoryService } from '../services/category.service';
   imports: [CommonModule, FormsModule]
 })
 export class RenameCategoryDialogComponent implements OnInit {
-  @Input() categoryId: string = '';
+  @Input() categoryId: number = 0;
   @Input() currentName: string = '';
   @Output() categoryRenamed = new EventEmitter<void>();
 

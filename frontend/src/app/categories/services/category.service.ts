@@ -27,19 +27,19 @@ export class CategoryService {
     );
   }
 
-  getCategory(id: string): Observable<Category> {
+  getCategory(id: number): Observable<Category> {
     return this.http.get<Category>(`${this.apiUrl}/${id}`, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  renameCategory(id: string, request: RenameCategoryRequest): Observable<Category> {
+  renameCategory(id: number, request: RenameCategoryRequest): Observable<Category> {
     return this.http.patch<Category>(`${this.apiUrl}/${id}`, request, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  deleteCategory(id: string): Observable<void> {
+  deleteCategory(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, this.httpOptions).pipe(
       catchError(this.handleError)
     );

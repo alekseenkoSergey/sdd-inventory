@@ -17,7 +17,7 @@ export class CategoryListComponent implements OnInit {
   successMessage: string | null = null;
   deleting: { [key: string]: boolean } = {};
 
-  @Output() renameRequested = new EventEmitter<{id: string, name: string}>();
+  @Output() renameRequested = new EventEmitter<{id: number, name: string}>();
 
   constructor(private categoryService: CategoryService) {}
 
@@ -46,7 +46,7 @@ export class CategoryListComponent implements OnInit {
     this.loadCategories();
   }
 
-  deleteCategory(id: string, name: string): void {
+  deleteCategory(id: number, name: string): void {
     if (confirm(`Are you sure you want to delete "${name}"?`)) {
       this.deleting[id] = true;
       this.categoryService.deleteCategory(id).subscribe({
@@ -77,7 +77,7 @@ export class CategoryListComponent implements OnInit {
     this.successMessage = null;
   }
 
-  renameCategory(id: string, name: string): void {
+  renameCategory(id: number, name: string): void {
     this.renameRequested.emit({ id, name });
   }
 }

@@ -23,7 +23,7 @@ export class CategoriesPageComponent implements OnInit {
 
   showCreateDialog = false;
   showRenameDialog = false;
-  selectedCategoryId: string = '';
+  selectedCategoryId: number = 0;
   selectedCategoryName: string = '';
 
   constructor(private router: Router) {}
@@ -52,7 +52,7 @@ export class CategoriesPageComponent implements OnInit {
     }
   }
 
-  openRenameDialog(categoryId: string, categoryName: string): void {
+  openRenameDialog(categoryId: number, categoryName: string): void {
     this.selectedCategoryId = categoryId;
     this.selectedCategoryName = categoryName;
     this.showRenameDialog = true;
