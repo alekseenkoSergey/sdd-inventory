@@ -1,12 +1,15 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationService } from '../location.service';
 import { Location } from '../location.model';
 
 @Component({
   selector: 'app-location-form',
   templateUrl: './location-form.component.html',
-  styleUrls: ['./location-form.component.css']
+  styleUrls: ['./location-form.component.css'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class LocationFormComponent implements OnInit {
   @Input() locationId: number | null = null;

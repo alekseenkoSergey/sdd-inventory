@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { LocationService } from '../location.service';
 import { Location } from '../location.model';
+import { LocationFormComponent } from '../location-form/location-form.component';
 
 @Component({
   selector: 'app-location-list',
   templateUrl: './location-list.component.html',
-  styleUrls: ['./location-list.component.css']
+  styleUrls: ['./location-list.component.css'],
+  standalone: true,
+  imports: [CommonModule, LocationFormComponent]
 })
 export class LocationListComponent implements OnInit {
   locations: Location[] = [];
