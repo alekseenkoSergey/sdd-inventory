@@ -1,0 +1,48 @@
+<div class="location-list-container">
+  <div class="location-list-header">
+    <h2>Locations</h2>
+    <button (click)="openCreateForm()" class="btn btn-primary">Create Location</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading locations...
+  </div>
+
+  <div *ngIf="!isLoading && locations.length === 0" class="no-locations">
+    <p>No locations yet. Create one to get started!</p>
+  </div>
+
+  <table *ngIf="!isLoading && locations.length > 0" class="locations-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let location of locations; trackBy: trackByLocationId">
+        <td>{{ location.name }}</td>
+        <td>{{ location.createdAt | date: 'short' }}</td>
+        <td>{{ location.updatedAt | date: 'short' }}</td>
+        <td>
+          <button (click)="openEditForm(location)" class="btn btn-secondary btn-sm">Rename</button>
+          <button (click)="deleteLocation(location)" class="btn btn-danger btn-sm">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <app-location-form
+    *ngIf="showForm"
+    [locationId]="editingLocationId"
+    (locationCreated)="onLocationCreated($event)"
+    (locationUpdated)="onLocationUpdated($event)"
+    (closed)="closeForm()">
+  </app-location-form>
+</div>

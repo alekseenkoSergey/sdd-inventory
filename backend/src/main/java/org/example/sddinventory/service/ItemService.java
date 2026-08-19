@@ -8,4 +8,9 @@ public class ItemService {
         // TODO: Implement item counting by category
         return 0;
     }
+
+    public int countItemsByLocation(Long locationId) {
+        // TODO: Implement item counting by location
+        return 0;
+    }
 }
