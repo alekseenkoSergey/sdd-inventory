@@ -29,16 +29,17 @@ public class SecurityConfig {
         // the refresh token and the configured token endpoint. No manual intervention required.
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/oauth2/**", "/login/**"))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/login", "/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
+                .requestMatchers("/api/auth/login", "/oauth2/**", "/login/**").permitAll()
                 .requestMatchers("/api/auth/**").authenticated()
                 .anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                .defaultSuccessUrl("http://localhost:4200/dashboard", true)
                 .failureHandler((request, response, exception) -> {
-                    response.sendRedirect("/login?error=" + exception.getMessage());
+                    response.sendRedirect("http://localhost:4200/login?error=" + exception.getMessage());
                 })
             )
             .logout(logout -> logout
