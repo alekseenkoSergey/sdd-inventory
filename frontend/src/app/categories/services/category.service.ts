@@ -9,35 +9,38 @@ import { Category, CreateCategoryRequest, RenameCategoryRequest } from '../model
 })
 export class CategoryService {
   private apiUrl = 'http://localhost:8080/api/categories';
+  private httpOptions = {
+    withCredentials: true
+  };
 
   constructor(private http: HttpClient) {}
 
   createCategory(request: CreateCategoryRequest): Observable<Category> {
-    return this.http.post<Category>(this.apiUrl, request).pipe(
+    return this.http.post<Category>(this.apiUrl, request, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   listCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl).pipe(
+    return this.http.get<Category[]>(this.apiUrl, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   getCategory(id: string): Observable<Category> {
-    return this.http.get<Category>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.get<Category>(`${this.apiUrl}/${id}`, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   renameCategory(id: string, request: RenameCategoryRequest): Observable<Category> {
-    return this.http.patch<Category>(`${this.apiUrl}/${id}`, request).pipe(
+    return this.http.patch<Category>(`${this.apiUrl}/${id}`, request, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteCategory(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
