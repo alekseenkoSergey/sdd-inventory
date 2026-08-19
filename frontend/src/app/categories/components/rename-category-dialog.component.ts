@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-rename-category-dialog',
   templateUrl: './rename-category-dialog.component.html',
-  styleUrls: ['./rename-category-dialog.component.css']
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
-export class RenameCategoryDialogComponent {
+export class RenameCategoryDialogComponent implements OnInit {
   @Input() categoryId: string = '';
   @Input() currentName: string = '';
   @Output() categoryRenamed = new EventEmitter<void>();

@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-create-category-dialog',
   templateUrl: './create-category-dialog.component.html',
-  styleUrls: ['./create-category-dialog.component.css']
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class CreateCategoryDialogComponent {
   categoryName = '';
