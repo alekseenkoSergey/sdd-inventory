@@ -300,6 +300,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
 }
 
 .feature-card:hover {

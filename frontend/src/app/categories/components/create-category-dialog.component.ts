@@ -6,6 +6,7 @@ import { CategoryService } from '../services/category.service';
 @Component({
   selector: 'app-create-category-dialog',
   templateUrl: './create-category-dialog.component.html',
+  styleUrl: './create-category-dialog.component.css',
   standalone: true,
   imports: [CommonModule, FormsModule]
 })

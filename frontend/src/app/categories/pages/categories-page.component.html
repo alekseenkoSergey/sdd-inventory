@@ -1,0 +1,49 @@
+<div class="categories-page">
+  <header class="page-header">
+    <div class="header-content">
+      <button class="back-btn" (click)="goBack()" title="Back to Home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <h1>Manage Categories</h1>
+      <button class="create-btn" (click)="openCreateDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Create Category
+      </button>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <app-category-list (renameRequested)="openRenameDialog($event.id, $event.name)"></app-category-list>
+  </main>
+
+  <!-- Create Category Dialog -->
+  <div class="dialog-overlay" *ngIf="showCreateDialog" (click)="closeCreateDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Create New Category</h2>
+        <button class="close-btn" (click)="closeCreateDialog()">×</button>
+      </div>
+      <app-create-category-dialog (categoryCreated)="onCategoryCreated()"></app-create-category-dialog>
+    </div>
+  </div>
+
+  <!-- Rename Category Dialog -->
+  <div class="dialog-overlay" *ngIf="showRenameDialog" (click)="closeRenameDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Rename Category</h2>
+        <button class="close-btn" (click)="closeRenameDialog()">×</button>
+      </div>
+      <app-rename-category-dialog
+        [categoryId]="selectedCategoryId"
+        [currentName]="selectedCategoryName"
+        (categoryRenamed)="onCategoryRenamed()">
+      </app-rename-category-dialog>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,4 @@
-<div class="dialog-container">
-  <h3>Create New Category</h3>
-
+<div class="dialog-form">
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </div>
@@ -15,15 +13,16 @@
         type="text"
         placeholder="Enter category name"
         [disabled]="loading"
+        autofocus
       />
     </div>
 
-    <div class="button-group">
-      <button type="submit" [disabled]="loading || !categoryName.trim()" class="btn-create">
-        {{ loading ? 'Creating...' : 'Create' }}
-      </button>
+    <div class="form-actions">
       <button type="button" (click)="onCancel()" [disabled]="loading" class="btn-cancel">
         Cancel
+      </button>
+      <button type="submit" [disabled]="loading || !categoryName.trim()" class="btn-submit">
+        {{ loading ? 'Creating...' : 'Create' }}
       </button>
     </div>
   </form>

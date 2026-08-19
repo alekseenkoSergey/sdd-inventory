@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category.model';
@@ -6,6 +6,7 @@ import { Category } from '../models/category.model';
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
+  styleUrl: './category-list.component.css',
   standalone: true,
   imports: [CommonModule]
 })
@@ -15,6 +16,8 @@ export class CategoryListComponent implements OnInit {
   error: string | null = null;
   successMessage: string | null = null;
   deleting: { [key: string]: boolean } = {};
+
+  @Output() renameRequested = new EventEmitter<{id: string, name: string}>();
 
   constructor(private categoryService: CategoryService) {}
 
@@ -71,5 +74,9 @@ export class CategoryListComponent implements OnInit {
 
   closeSuccess(): void {
     this.successMessage = null;
+  }
+
+  renameCategory(id: string, name: string): void {
+    this.renameRequested.emit({ id, name });
   }
 }

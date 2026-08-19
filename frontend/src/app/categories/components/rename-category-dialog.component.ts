@@ -6,6 +6,7 @@ import { CategoryService } from '../services/category.service';
 @Component({
   selector: 'app-rename-category-dialog',
   templateUrl: './rename-category-dialog.component.html',
+  styleUrl: './rename-category-dialog.component.css',
   standalone: true,
   imports: [CommonModule, FormsModule]
 })

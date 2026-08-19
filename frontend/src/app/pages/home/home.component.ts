@@ -37,4 +37,8 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
+  navigateToCategories(): void {
+    this.router.navigate(['/categories']);
+  }
 }

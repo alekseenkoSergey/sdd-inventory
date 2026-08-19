@@ -33,6 +33,11 @@
         <td>{{ category.createdAt | date: 'short' }}</td>
         <td>
           <button
+            (click)="renameCategory(category.id, category.name)"
+            class="btn-rename">
+            Rename
+          </button>
+          <button
             (click)="deleteCategory(category.id, category.name)"
             [disabled]="deleting[category.id]"
             class="btn-delete">
