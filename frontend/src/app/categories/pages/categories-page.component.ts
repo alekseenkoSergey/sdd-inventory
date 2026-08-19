@@ -40,12 +40,16 @@ export class CategoriesPageComponent implements OnInit {
 
   closeCreateDialog(): void {
     this.showCreateDialog = false;
-    this.createDialogComponent.onCancel();
+    if (this.createDialogComponent) {
+      this.createDialogComponent.onCancel();
+    }
   }
 
   onCategoryCreated(): void {
     this.closeCreateDialog();
-    this.categoryListComponent.refreshCategories();
+    if (this.categoryListComponent) {
+      this.categoryListComponent.refreshCategories();
+    }
   }
 
   openRenameDialog(categoryId: string, categoryName: string): void {
@@ -60,6 +64,8 @@ export class CategoriesPageComponent implements OnInit {
 
   onCategoryRenamed(): void {
     this.closeRenameDialog();
-    this.categoryListComponent.refreshCategories();
+    if (this.categoryListComponent) {
+      this.categoryListComponent.refreshCategories();
+    }
   }
 }

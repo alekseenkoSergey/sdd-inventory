@@ -30,13 +30,14 @@ export class CategoryListComponent implements OnInit {
     this.error = null;
     this.categoryService.listCategories().subscribe({
       next: (data) => {
+        console.log('Categories loaded:', data);
         this.categories = data;
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load categories';
+        console.error('Failed to load categories:', err);
+        this.error = 'Failed to load categories: ' + (err.error?.message || err.message || 'Unknown error');
         this.loading = false;
-        console.error(err);
       }
     });
   }
