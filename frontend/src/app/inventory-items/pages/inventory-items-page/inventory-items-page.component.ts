@@ -68,6 +68,8 @@ export class CurrentPageExtractPipe implements PipeTransform {
       <div *ngIf="!(loading$ | async) && (items$ | async) as items">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
           <app-search-filter
+            [categories]="(categories$ | async) ?? []"
+            [locations]="(locations$ | async) ?? []"
             (filterApplied)="onFiltersApplied($event)"
           ></app-search-filter>
         </div>

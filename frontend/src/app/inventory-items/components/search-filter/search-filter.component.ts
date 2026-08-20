@@ -1,17 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventoryItemsService } from '../../services/inventory-items.service';
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Location {
-  id: number;
-  name: string;
-}
+import { Category, Location } from '../../models/inventory-item.model';
 
 interface FilterParams {
   search?: string;
@@ -28,7 +19,9 @@ interface FilterParams {
   templateUrl: './search-filter.component.html',
   styleUrl: './search-filter.component.css'
 })
-export class SearchFilterComponent implements OnInit {
+export class SearchFilterComponent {
+  @Input() categories: Category[] = [];
+  @Input() locations: Location[] = [];
   @Output() filterApplied = new EventEmitter<FilterParams>();
 
   searchTerm: string = '';
@@ -36,9 +29,6 @@ export class SearchFilterComponent implements OnInit {
   selectedLocation: number | null = null;
   selectedStatus: string = 'ALL';
   selectedStockState: string = 'ALL';
-
-  categories: Category[] = [];
-  locations: Location[] = [];
 
   statusOptions = [
     { value: 'ALL', label: 'All Items' },
@@ -54,35 +44,6 @@ export class SearchFilterComponent implements OnInit {
   ];
 
   constructor(private inventoryService: InventoryItemsService) {}
-
-  ngOnInit(): void {
-    this.loadCategories();
-    this.loadLocations();
-  }
-
-  loadCategories(): void {
-    this.inventoryService.loadCategories().subscribe({
-      next: (categories) => {
-        console.log('Categories loaded:', categories);
-        this.categories = categories;
-      },
-      error: (err) => {
-        console.error('Error loading categories', err);
-      }
-    });
-  }
-
-  loadLocations(): void {
-    this.inventoryService.loadLocations().subscribe({
-      next: (locations) => {
-        console.log('Locations loaded:', locations);
-        this.locations = locations;
-      },
-      error: (err) => {
-        console.error('Error loading locations', err);
-      }
-    });
-  }
 
   onSearch(): void {
     this.applyFilters();
