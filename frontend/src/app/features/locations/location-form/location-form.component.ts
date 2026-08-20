@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationService } from '../location.service';
 import { Location } from '../location.model';
@@ -9,7 +10,7 @@ import { Location } from '../location.model';
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule]
 })
 export class LocationFormComponent implements OnInit {
   @Input() locationId: number | null = null;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { LocationService } from '../location.service';
 import { Location } from '../location.model';
 import { LocationFormComponent } from '../location-form/location-form.component';
@@ -9,7 +10,7 @@ import { LocationFormComponent } from '../location-form/location-form.component'
   templateUrl: './location-list.component.html',
   styleUrls: ['./location-list.component.css'],
   standalone: true,
-  imports: [CommonModule, LocationFormComponent]
+  imports: [CommonModule, HttpClientModule, LocationFormComponent]
 })
 export class LocationListComponent implements OnInit {
   locations: Location[] = [];
