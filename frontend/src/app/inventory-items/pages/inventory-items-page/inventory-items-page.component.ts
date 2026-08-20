@@ -7,6 +7,17 @@ import { ErrorMessageComponent } from '../../components/error-message/error-mess
 import { ItemListComponent } from '../../components/item-list/item-list.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ItemFormComponent } from '../../components/item-form/item-form.component';
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'currentPageExtract',
+  standalone: true
+})
+export class CurrentPageExtractPipe implements PipeTransform {
+  transform(filters: ItemFilters | null): number {
+    return filters?.page ?? 0;
+  }
+}
 
 @Component({
   selector: 'app-inventory-items-page',
@@ -17,7 +28,8 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
     ErrorMessageComponent,
     ItemListComponent,
     PaginationComponent,
-    ItemFormComponent
+    ItemFormComponent,
+    CurrentPageExtractPipe
   ],
   template: `
     <div class="inventory-items-page">
@@ -45,7 +57,7 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
 
         <app-pagination
           [currentPage]="filters$ | async | currentPageExtract"
-          [totalPages]="totalPages$ | async"
+          [totalPages]="(totalPages$ | async) ?? 0"
           (pageChange)="onPageChange($event)"
         ></app-pagination>
       </div>
@@ -60,9 +72,9 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
           <div class="modal-body">
             <app-item-form
               [item]="editingItem"
-              [categories]="categories$ | async"
-              [locations]="locations$ | async"
-              [loading]="loading$ | async"
+              [categories]="(categories$ | async) ?? []"
+              [locations]="(locations$ | async) ?? []"
+              [loading]="(loading$ | async) ?? false"
               (save)="onSave($event)"
               (cancel)="closeForm()"
             ></app-item-form>
@@ -166,18 +178,18 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
   `]
 })
 export class InventoryItemsPageComponent implements OnInit {
-  items$ = this.service.items$;
-  loading$ = this.service.loading$;
-  error$ = this.service.error$;
-  filters$ = this.service.filters$;
-  totalPages$ = this.service.totalPages$;
-  categories$ = this.service.categories$;
-  locations$ = this.service.locations$;
-
   showForm = false;
   editingItem: InventoryItem | undefined;
 
   constructor(private service: InventoryItemsService) {}
+
+  get items$() { return this.service.items$; }
+  get loading$() { return this.service.loading$; }
+  get error$() { return this.service.error$; }
+  get filters$() { return this.service.filters$; }
+  get totalPages$() { return this.service.totalPages$; }
+  get categories$() { return this.service.categories$; }
+  get locations$() { return this.service.locations$; }
 
   ngOnInit(): void {
     this.service.listItems().subscribe();
@@ -232,18 +244,5 @@ export class InventoryItemsPageComponent implements OnInit {
 
   onRetry(): void {
     this.service.listItems().subscribe();
-  }
-}
-
-// Custom pipe to extract current page from filters
-import { Pipe, PipeTransform } from '@angular/core';
-
-@Pipe({
-  name: 'currentPageExtract',
-  standalone: true
-})
-export class CurrentPageExtractPipe implements PipeTransform {
-  transform(filters: ItemFilters | null): number {
-    return filters?.page ?? 0;
   }
 }

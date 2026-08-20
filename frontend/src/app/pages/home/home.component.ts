@@ -45,4 +45,8 @@ export class HomeComponent implements OnInit {
   navigateToLocations(): void {
     this.router.navigate(['/locations']);
   }
+
+  navigateToInventoryItems(): void {
+    this.router.navigate(['/inventory/items']);
+  }
 }

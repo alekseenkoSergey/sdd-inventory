@@ -58,9 +58,9 @@ export class InventoryItemsService {
     }
 
     return this.api.get<PagedListResponse>(`/v1/inventory-items?${params.toString()}`).pipe(
-      tap(response => {
-        this.itemsSubject.next(response.content);
-        this.totalPagesSubject.next(response.totalPages);
+      tap((response: PagedListResponse) => {
+        this.itemsSubject.next(response.content || []);
+        this.totalPagesSubject.next(response.totalPages || 0);
       }),
       catchError(error => this.handleError(error)),
       finalize(() => this.loadingSubject.next(false))
@@ -82,7 +82,7 @@ export class InventoryItemsService {
     this.errorSubject.next(null);
 
     return this.api.post<InventoryItem>(`/v1/inventory-items`, data).pipe(
-      tap(item => {
+      tap((item: InventoryItem) => {
         const current = this.itemsSubject.value;
         this.itemsSubject.next([item, ...current]);
       }),
@@ -96,7 +96,7 @@ export class InventoryItemsService {
     this.errorSubject.next(null);
 
     return this.api.patch<InventoryItem>(`/v1/inventory-items/${id}`, data).pipe(
-      tap(updated => {
+      tap((updated: InventoryItem) => {
         const items = this.itemsSubject.value.map(item =>
           item.id === id ? updated : item
         );
@@ -112,7 +112,7 @@ export class InventoryItemsService {
     this.errorSubject.next(null);
 
     return this.api.post<InventoryItem>(`/v1/inventory-items/${id}/archive`, {}).pipe(
-      tap(updated => {
+      tap((updated: InventoryItem) => {
         const items = this.itemsSubject.value.map(item =>
           item.id === id ? updated : item
         );
@@ -128,7 +128,7 @@ export class InventoryItemsService {
     this.errorSubject.next(null);
 
     return this.api.post<InventoryItem>(`/v1/inventory-items/${id}/restore`, {}).pipe(
-      tap(updated => {
+      tap((updated: InventoryItem) => {
         const items = this.itemsSubject.value.map(item =>
           item.id === id ? updated : item
         );
@@ -183,14 +183,14 @@ export class InventoryItemsService {
 
   loadCategories(): Observable<Category[]> {
     return this.api.get<Category[]>(`/v1/categories`).pipe(
-      tap(categories => this.categoriesSubject.next(categories)),
+      tap((categories: Category[]) => this.categoriesSubject.next(categories || [])),
       catchError(error => this.handleError(error))
     );
   }
 
   loadLocations(): Observable<Location[]> {
     return this.api.get<Location[]>(`/v1/locations`).pipe(
-      tap(locations => this.locationsSubject.next(locations)),
+      tap((locations: Location[]) => this.locationsSubject.next(locations || [])),
       catchError(error => this.handleError(error))
     );
   }

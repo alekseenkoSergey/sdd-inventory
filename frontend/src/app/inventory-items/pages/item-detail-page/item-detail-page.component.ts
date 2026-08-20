@@ -119,9 +119,9 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
           <div class="modal-body">
             <app-item-form
               [item]="item"
-              [categories]="categories$ | async"
-              [locations]="locations$ | async"
-              [loading]="loading$ | async"
+              [categories]="(categories$ | async) ?? []"
+              [locations]="(locations$ | async) ?? []"
+              [loading]="(loading$ | async) ?? false"
               (save)="onSave($event)"
               (cancel)="closeForm()"
             ></app-item-form>
@@ -339,10 +339,6 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
 })
 export class ItemDetailPageComponent implements OnInit {
   item: InventoryItem | null = null;
-  loading$ = this.service.loading$;
-  error$ = this.service.error$;
-  categories$ = this.service.categories$;
-  locations$ = this.service.locations$;
   showForm = false;
 
   constructor(
@@ -350,6 +346,11 @@ export class ItemDetailPageComponent implements OnInit {
     private router: Router,
     private service: InventoryItemsService
   ) {}
+
+  get loading$() { return this.service.loading$; }
+  get error$() { return this.service.error$; }
+  get categories$() { return this.service.categories$; }
+  get locations$() { return this.service.locations$; }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
