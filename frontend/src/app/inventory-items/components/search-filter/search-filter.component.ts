@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InventoryItemsService } from '../../services/inventory-items.service';
 import { Category, Location } from '../../models/inventory-item.model';
 
 interface FilterParams {
@@ -43,8 +42,6 @@ export class SearchFilterComponent {
     { value: 'IN_STOCK', label: 'In Stock' }
   ];
 
-  constructor(private inventoryService: InventoryItemsService) {}
-
   onSearch(): void {
     this.applyFilters();
   }
@@ -82,13 +79,6 @@ export class SearchFilterComponent {
       params.stockState = this.selectedStockState;
     }
 
-    this.inventoryService.applySearchAndFilters(
-      params.search,
-      params.categoryId,
-      params.locationId,
-      params.status,
-      params.stockState
-    );
     this.filterApplied.emit(params);
   }
 
@@ -98,7 +88,6 @@ export class SearchFilterComponent {
     this.selectedLocation = null;
     this.selectedStatus = 'ALL';
     this.selectedStockState = 'ALL';
-    this.inventoryService.clearFilters();
     this.filterApplied.emit({});
   }
 
