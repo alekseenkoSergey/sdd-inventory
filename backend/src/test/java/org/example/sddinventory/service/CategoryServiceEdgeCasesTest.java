@@ -24,13 +24,13 @@ public class CategoryServiceEdgeCasesTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private ItemService itemService;
+    private ItemCountingService itemCountingService;
 
     private Long userId;
 
     @BeforeEach
     public void setUp() {
-        categoryService = new CategoryService(categoryRepository, itemService);
+        categoryService = new CategoryService(categoryRepository, itemCountingService);
         userId = 1L;
     }
 
@@ -42,7 +42,7 @@ public class CategoryServiceEdgeCasesTest {
         Category category = new Category(userId, "");
         category.setId(1L);
         lenient().when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, "   ");
         assertEquals("", result.getName());
@@ -57,7 +57,7 @@ public class CategoryServiceEdgeCasesTest {
         Category category = new Category(userId, longName);
         category.setId(1L);
         lenient().when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, longName);
         assertEquals(255, result.getName().length());
@@ -72,7 +72,7 @@ public class CategoryServiceEdgeCasesTest {
         Category category = new Category(userId, specialName);
         category.setId(1L);
         lenient().when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, specialName);
         assertEquals(specialName, result.getName());
@@ -99,7 +99,7 @@ public class CategoryServiceEdgeCasesTest {
         Category category = new Category(userId, "ElEcTrOnIcS");
         category.setId(1L);
         lenient().when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         categoryService.createCategory(userId, "  ElEcTrOnIcS  ");
 

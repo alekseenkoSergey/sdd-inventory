@@ -27,13 +27,13 @@ public class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private ItemService itemService;
+    private ItemCountingService itemCountingService;
 
     private Long userId;
 
     @BeforeEach
     public void setUp() {
-        categoryService = new CategoryService(categoryRepository, itemService);
+        categoryService = new CategoryService(categoryRepository, itemCountingService);
         userId = 1L;
     }
 
@@ -45,7 +45,7 @@ public class CategoryServiceTest {
         Category category = new Category(userId, "Electronics");
         category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.createCategory(userId, "Electronics");
 
@@ -74,7 +74,7 @@ public class CategoryServiceTest {
         Category category = new Category(userId, "Electronics");
         category.setId(1L);
         when(categoryRepository.save(any())).thenReturn(category);
-        lenient().when(itemService.countItemsByCategory(1L)).thenReturn(0);
+        lenient().when(itemCountingService.countItemsByCategory(1L)).thenReturn(0);
 
         categoryService.createCategory(userId, "  Electronics  ");
 
@@ -95,7 +95,7 @@ public class CategoryServiceTest {
         Category renamed = new Category(userId, "Tools");
         renamed.setId(categoryId);
         when(categoryRepository.save(any())).thenReturn(renamed);
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.renameCategory(userId, categoryId, "Tools");
 
@@ -128,7 +128,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(0);
 
         categoryService.deleteCategory(userId, categoryId);
 
@@ -143,7 +143,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(5);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(5);
 
         CategoryHasItemsException ex = assertThrows(CategoryHasItemsException.class,
             () -> categoryService.deleteCategory(userId, categoryId));

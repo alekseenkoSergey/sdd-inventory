@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
     private final CategoryRepository categoryRepository;
-    private final ItemService itemService;
+    private final ItemCountingService itemCountingService;
 
-    public CategoryService(CategoryRepository categoryRepository, ItemService itemService) {
+    public CategoryService(CategoryRepository categoryRepository, ItemCountingService itemCountingService) {
         this.categoryRepository = categoryRepository;
-        this.itemService = itemService;
+        this.itemCountingService = itemCountingService;
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class CategoryService {
     public List<CategoryResponseDTO> listCategories(Long userId) {
         return categoryRepository.findAllByUserId(userId).stream()
             .map(cat -> {
-                int itemCount = itemService.countItemsByCategory(cat.getId());
+                int itemCount = itemCountingService.countItemsByCategory(cat.getId());
                 return convertToDTO(cat, itemCount);
             })
             .collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class CategoryService {
         Category updated = categoryRepository.save(category);
 
         logger.info("Category renamed: id={}, userId={}, newName={}", categoryId, userId, trimmedName);
-        int itemCount = itemService.countItemsByCategory(categoryId);
+        int itemCount = itemCountingService.countItemsByCategory(categoryId);
         return convertToDTO(updated, itemCount);
     }
 
@@ -88,7 +88,7 @@ public class CategoryService {
                 return new CategoryNotFoundException("Category not found");
             });
 
-        int itemCount = itemService.countItemsByCategory(categoryId);
+        int itemCount = itemCountingService.countItemsByCategory(categoryId);
         if (itemCount > 0) {
             logger.warn("Attempt to delete category with items: userId={}, categoryId={}, itemCount={}", userId, categoryId, itemCount);
             throw new CategoryHasItemsException("Cannot delete: " + itemCount + " items assigned. Please reassign items to another category first.", itemCount);
@@ -106,7 +106,7 @@ public class CategoryService {
                 return new CategoryNotFoundException("Category not found");
             });
 
-        int itemCount = itemService.countItemsByCategory(categoryId);
+        int itemCount = itemCountingService.countItemsByCategory(categoryId);
         return convertToDTO(category, itemCount);
     }
 

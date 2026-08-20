@@ -23,13 +23,13 @@ public class CategoryServiceDeleteTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private ItemService itemService;
+    private ItemCountingService itemCountingService;
 
     private Long userId;
 
     @BeforeEach
     public void setUp() {
-        categoryService = new CategoryService(categoryRepository, itemService);
+        categoryService = new CategoryService(categoryRepository, itemCountingService);
         userId = 1L;
     }
 
@@ -41,7 +41,7 @@ public class CategoryServiceDeleteTest {
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(5);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(5);
 
         CategoryHasItemsException ex = assertThrows(CategoryHasItemsException.class,
             () -> categoryService.deleteCategory(userId, categoryId));
@@ -57,7 +57,7 @@ public class CategoryServiceDeleteTest {
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(0);
 
         categoryService.deleteCategory(userId, categoryId);
 
@@ -84,7 +84,7 @@ public class CategoryServiceDeleteTest {
 
         when(categoryRepository.findByIdAndUserId(categoryId, userId))
             .thenReturn(Optional.of(category));
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(0);
         doThrow(new org.springframework.orm.ObjectOptimisticLockingFailureException("Version conflict", null))
             .when(categoryRepository).deleteByIdAndUserId(categoryId, userId);
 

@@ -26,13 +26,13 @@ public class CategoryServiceRenameTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private ItemService itemService;
+    private ItemCountingService itemCountingService;
 
     private Long userId;
 
     @BeforeEach
     public void setUp() {
-        categoryService = new CategoryService(categoryRepository, itemService);
+        categoryService = new CategoryService(categoryRepository, itemCountingService);
         userId = 1L;
     }
 
@@ -50,7 +50,7 @@ public class CategoryServiceRenameTest {
         Category renamed = new Category(userId, "Tools");
         renamed.setId(categoryId);
         when(categoryRepository.save(any())).thenReturn(renamed);
-        when(itemService.countItemsByCategory(categoryId)).thenReturn(0);
+        when(itemCountingService.countItemsByCategory(categoryId)).thenReturn(0);
 
         CategoryResponseDTO result = categoryService.renameCategory(userId, categoryId, "Tools");
 

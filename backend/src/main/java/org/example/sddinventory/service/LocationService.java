@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 public class LocationService {
     private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
     private final LocationRepository locationRepository;
-    private final ItemService itemService;
+    private final ItemCountingService itemCountingService;
 
-    public LocationService(LocationRepository locationRepository, ItemService itemService) {
+    public LocationService(LocationRepository locationRepository, ItemCountingService itemCountingService) {
         this.locationRepository = locationRepository;
-        this.itemService = itemService;
+        this.itemCountingService = itemCountingService;
     }
 
     public LocationResponseDTO createLocation(Long userId, String name) {
@@ -95,7 +95,7 @@ public class LocationService {
                 return new LocationNotFoundException("Location not found");
             });
 
-        int itemCount = itemService.countItemsByLocation(locationId);
+        int itemCount = itemCountingService.countItemsByLocation(locationId);
         if (itemCount > 0) {
             logger.warn("Cannot delete non-empty location: userId={}, locationId={}, itemCount={}", userId, locationId, itemCount);
             throw new LocationHasItemsException("Cannot delete location with items. Please remove or reassign items first.", itemCount);
