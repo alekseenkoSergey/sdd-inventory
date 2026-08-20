@@ -12,6 +12,7 @@ import { StockInFormComponent } from '../../../stock-movements/movement-form/sto
 import { StockOutFormComponent } from '../../../stock-movements/movement-form/stock-out-form.component';
 import { AdjustmentFormComponent } from '../../../stock-movements/movement-form/adjustment-form.component';
 import { MovementHistoryModalComponent } from '../../../stock-movements/movement-history-modal/movement-history-modal.component';
+import { SearchFilterComponent } from '../../components/search-filter/search-filter.component';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -38,6 +39,7 @@ export class CurrentPageExtractPipe implements PipeTransform {
     StockOutFormComponent,
     AdjustmentFormComponent,
     MovementHistoryModalComponent,
+    SearchFilterComponent,
     CurrentPageExtractPipe
   ],
   template: `
@@ -64,7 +66,14 @@ export class CurrentPageExtractPipe implements PipeTransform {
       <app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
 
       <div *ngIf="!(loading$ | async) && (items$ | async) as items">
-        <app-item-list
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+          <app-search-filter
+            (filterApplied)="onFiltersApplied($event)"
+          ></app-search-filter>
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+          <app-item-list
           [items]="items"
           [categories]="(categories$ | async) ?? []"
           [locations]="(locations$ | async) ?? []"
@@ -77,11 +86,12 @@ export class CurrentPageExtractPipe implements PipeTransform {
           (history)="showHistoryModal($event)"
         ></app-item-list>
 
-        <app-pagination
-          [currentPage]="filters$ | async | currentPageExtract"
-          [totalPages]="(totalPages$ | async) ?? 0"
-          (pageChange)="onPageChange($event)"
-        ></app-pagination>
+          <app-pagination
+            [currentPage]="filters$ | async | currentPageExtract"
+            [totalPages]="(totalPages$ | async) ?? 0"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        </div>
       </div>
 
       <!-- Modal for create/edit form -->
@@ -446,5 +456,15 @@ export class InventoryItemsPageComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/']);
+  }
+
+  onFiltersApplied(filters: any): void {
+    this.service.applySearchAndFilters(
+      filters.search,
+      filters.categoryId,
+      filters.locationId,
+      filters.status,
+      filters.stockState
+    );
   }
 }

@@ -57,6 +57,9 @@ export interface ItemFilters {
   size: number;
   status?: 'ACTIVE' | 'ARCHIVED' | null;
   categoryId?: number | null;
+  search?: string | null;
+  locationId?: number | null;
+  stockState?: string | null;
 }
 
 export interface ApiError {

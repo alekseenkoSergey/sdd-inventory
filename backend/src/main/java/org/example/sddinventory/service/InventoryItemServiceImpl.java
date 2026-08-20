@@ -220,6 +220,66 @@ public class InventoryItemServiceImpl implements InventoryItemService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<InventoryItemResponseDTO> searchItems(Long userId, String searchTerm, int page, int size) {
+        logger.debug("Searching inventory items: userId={}, searchTerm={}, page={}, size={}", userId, searchTerm, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InventoryItem> results = inventoryItemRepository.searchByMultipleFields(userId, searchTerm, pageable);
+        return results.map(this::convertToDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<InventoryItemResponseDTO> filterItems(Long userId, Long categoryId, Long locationId,
+                                                       String status, String stockState, int page, int size) {
+        logger.debug("Filtering inventory items: userId={}, categoryId={}, locationId={}, status={}, stockState={}, page={}, size={}",
+            userId, categoryId, locationId, status, stockState, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+
+        ItemStatus itemStatus = null;
+        if (status != null && !status.equalsIgnoreCase("ALL")) {
+            try {
+                itemStatus = ItemStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                logger.warn("Invalid status provided: {}", status);
+                itemStatus = null;
+            }
+        }
+
+        Page<InventoryItem> results = inventoryItemRepository.filterByCategoryAndLocation(userId, categoryId, locationId, pageable);
+
+        if (itemStatus != null) {
+            results = results.map(item -> {
+                if (item.getStatus() == itemStatus) {
+                    return item;
+                }
+                return null;
+            }).filter(item -> item != null);
+        }
+
+        if (stockState != null && !stockState.equalsIgnoreCase("ALL")) {
+            results = applyStockStateFilter(results, stockState);
+        }
+
+        return results.map(this::convertToDTO);
+    }
+
+    private Page<InventoryItem> applyStockStateFilter(Page<InventoryItem> items, String stockState) {
+        return items.map(item -> {
+            boolean matches = false;
+            if ("OUT_OF_STOCK".equalsIgnoreCase(stockState)) {
+                matches = item.getCurrentQuantity().signum() == 0;
+            } else if ("LOW_STOCK".equalsIgnoreCase(stockState)) {
+                matches = item.getCurrentQuantity().signum() > 0 &&
+                    item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) <= 0;
+            } else if ("IN_STOCK".equalsIgnoreCase(stockState)) {
+                matches = item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) > 0;
+            }
+            return matches ? item : null;
+        }).filter(item -> item != null);
+    }
+
     private InventoryItemResponseDTO convertToDTO(InventoryItem item) {
         return new InventoryItemResponseDTO(
             item.getId(),

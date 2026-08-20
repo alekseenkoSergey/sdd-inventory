@@ -30,4 +30,22 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
 
     @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 AND i.sku = ?2")
     Optional<InventoryItem> findByUserIdAndSku(Long userId, String sku);
+
+    @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 " +
+           "AND (LOWER(i.name) LIKE LOWER(CONCAT('%', ?2, '%')) " +
+           "OR LOWER(i.description) LIKE LOWER(CONCAT('%', ?2, '%')) " +
+           "OR LOWER(i.sku) LIKE LOWER(CONCAT('%', ?2, '%'))) " +
+           "ORDER BY i.createdDate DESC")
+    Page<InventoryItem> searchByMultipleFields(Long userId, String searchTerm, Pageable pageable);
+
+    @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 " +
+           "AND (?2 IS NULL OR i.category.id = ?2) " +
+           "AND (?3 IS NULL OR i.location.id = ?3) " +
+           "ORDER BY i.createdDate DESC")
+    Page<InventoryItem> filterByCategoryAndLocation(Long userId, Long categoryId, Long locationId, Pageable pageable);
+
+    @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 " +
+           "AND (?2 IS NULL OR i.status = ?2) " +
+           "ORDER BY i.createdDate DESC")
+    Page<InventoryItem> filterByStatus(Long userId, ItemStatus status, Pageable pageable);
 }

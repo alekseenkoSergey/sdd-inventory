@@ -25,7 +25,10 @@ export class InventoryItemsService {
     page: 0,
     size: 20,
     status: null,
-    categoryId: null
+    categoryId: null,
+    search: null,
+    locationId: null,
+    stockState: null
   });
   private totalPagesSubject = new BehaviorSubject<number>(0);
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
@@ -50,11 +53,20 @@ export class InventoryItemsService {
       .set('page', String(filters.page))
       .set('size', String(filters.size));
 
+    if (filters.search) {
+      params = params.set('search', filters.search);
+    }
     if (filters.status) {
       params = params.set('status', filters.status);
     }
     if (filters.categoryId) {
       params = params.set('categoryId', String(filters.categoryId));
+    }
+    if (filters.locationId) {
+      params = params.set('locationId', String(filters.locationId));
+    }
+    if (filters.stockState) {
+      params = params.set('stockState', filters.stockState);
     }
 
     return this.api.get<PagedListResponse>(`/v1/inventory-items?${params.toString()}`).pipe(
@@ -176,7 +188,25 @@ export class InventoryItemsService {
       page: 0,
       size: 20,
       status: null,
-      categoryId: null
+      categoryId: null,
+      search: null,
+      locationId: null,
+      stockState: null
+    });
+    this.listItems().subscribe();
+  }
+
+  applySearchAndFilters(search?: string, categoryId?: number, locationId?: number,
+                       statusFilter?: string, stockState?: string): void {
+    const current = this.filtersSubject.value;
+    this.filtersSubject.next({
+      page: 0,
+      size: current.size,
+      status: statusFilter || null,
+      categoryId: categoryId || null,
+      search: search || null,
+      locationId: locationId || null,
+      stockState: stockState || null
     });
     this.listItems().subscribe();
   }

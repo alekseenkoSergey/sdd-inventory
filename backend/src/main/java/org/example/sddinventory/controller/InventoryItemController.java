@@ -51,8 +51,22 @@ public class InventoryItemController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size,
         @RequestParam(required = false) ItemStatus status,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Long categoryId,
+        @RequestParam(required = false) Long locationId,
+        @RequestParam(required = false) String statusFilter,
+        @RequestParam(required = false) String stockState,
         Authentication authentication) {
         Long userId = extractUserId(authentication);
+
+        if (search != null && !search.trim().isEmpty()) {
+            return ResponseEntity.ok(inventoryItemService.searchItems(userId, search, page, size));
+        }
+
+        if (categoryId != null || locationId != null || statusFilter != null || stockState != null) {
+            return ResponseEntity.ok(inventoryItemService.filterItems(userId, categoryId, locationId, statusFilter, stockState, page, size));
+        }
+
         Page<InventoryItemResponseDTO> items = inventoryItemService.listItems(userId, page, size, status);
         return ResponseEntity.ok(items);
     }

@@ -22,8 +22,8 @@
 
 **Purpose**: Project initialization and database schema setup
 
-- [ ] T001 Create Flyway migration V*__add_search_filter_indexes.sql for search/filter indexes in backend/src/main/resources/db/migration/
-- [ ] T002 Create InventoryItemSearchResponseDTO in backend/src/main/java/com/inventory/model/InventoryItemSearchResponseDTO.java
+- [x] T001 Create Flyway migration V*__add_search_filter_indexes.sql for search/filter indexes in backend/src/main/resources/db/migration/
+- [x] T002 Create InventoryItemSearchResponseDTO in backend/src/main/java/com/inventory/model/InventoryItemSearchResponseDTO.java
 
 ---
 
@@ -33,11 +33,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Enhance InventoryItemRepository with searchByMultipleFields() method in backend/src/main/java/com/inventory/repository/InventoryItemRepository.java
-- [ ] T004 Enhance InventoryItemService with search/filter orchestration logic in backend/src/main/java/com/inventory/service/InventoryItemService.java
-- [ ] T005 Enhance InventoryItemController GET /api/inventory-items endpoint to accept search/filter parameters in backend/src/main/java/com/inventory/controller/InventoryItemController.java
-- [ ] T006 [P] Create SearchFilterComponent in frontend/src/app/inventory/search-filter/search-filter.component.ts
-- [ ] T007 [P] Create search-filter.component.html template in frontend/src/app/inventory/search-filter/search-filter.component.html
+- [x] T003 Enhance InventoryItemRepository with searchByMultipleFields() method in backend/src/main/java/com/inventory/repository/InventoryItemRepository.java
+- [x] T004 Enhance InventoryItemService with search/filter orchestration logic in backend/src/main/java/com/inventory/service/InventoryItemService.java
+- [x] T005 Enhance InventoryItemController GET /api/inventory-items endpoint to accept search/filter parameters in backend/src/main/java/com/inventory/controller/InventoryItemController.java
+- [x] T006 [P] Create SearchFilterComponent in frontend/src/app/inventory/search-filter/search-filter.component.ts
+- [x] T007 [P] Create search-filter.component.html template in frontend/src/app/inventory/search-filter/search-filter.component.html
 
 **Checkpoint**: Backend API and frontend shell ready - user story implementation can now begin
 
@@ -51,15 +51,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Implement searchByMultipleFields query method in InventoryItemRepository using ILIKE for case-insensitive matching in backend/src/main/java/com/inventory/repository/InventoryItemRepository.java
-- [ ] T009 [US1] Add searchInventoryItems method to InventoryItemService in backend/src/main/java/com/inventory/service/InventoryItemService.java
-- [ ] T010 [US1] Wire search parameter binding in InventoryItemController GET endpoint in backend/src/main/java/com/inventory/controller/InventoryItemController.java
-- [ ] T011 [P] [US1] Update search-filter.component.ts to handle search box input and Enter key submission in frontend/src/app/inventory/search-filter/search-filter.component.ts
-- [ ] T012 [P] [US1] Create search input field in search-filter.component.html with Enter key binding and Search button in frontend/src/app/inventory/search-filter/search-filter.component.html
-- [ ] T013 [US1] Enhance inventory.service.ts to construct API calls with search parameter in frontend/src/app/inventory/inventory.service.ts
-- [ ] T014 [US1] Integrate SearchFilterComponent into inventory-list.component.html and bind search results to table in frontend/src/app/inventory/inventory-list/inventory-list.component.html
-- [ ] T015 [US1] Update inventory-list.component.ts to handle search results and empty state in frontend/src/app/inventory/inventory-list/inventory-list.component.ts
-- [ ] T016 [US1] Create empty state component/template showing message when search returns no results in frontend/src/app/inventory/empty-state/empty-state.component.ts
+- [x] T008 [US1] Implement searchByMultipleFields query method in InventoryItemRepository using ILIKE for case-insensitive matching in backend/src/main/java/com/inventory/repository/InventoryItemRepository.java
+- [x] T009 [US1] Add searchInventoryItems method to InventoryItemService in backend/src/main/java/com/inventory/service/InventoryItemService.java
+- [x] T010 [US1] Wire search parameter binding in InventoryItemController GET endpoint in backend/src/main/java/com/inventory/controller/InventoryItemController.java
+- [x] T011 [P] [US1] Update search-filter.component.ts to handle search box input and Enter key submission in frontend/src/app/inventory/search-filter/search-filter.component.ts
+- [x] T012 [P] [US1] Create search input field in search-filter.component.html with Enter key binding and Search button in frontend/src/app/inventory/search-filter/search-filter.component.html
+- [x] T013 [US1] Enhance inventory.service.ts to construct API calls with search parameter in frontend/src/app/inventory/inventory.service.ts
+- [x] T014 [US1] Integrate SearchFilterComponent into inventory-list.component.html and bind search results to table in frontend/src/app/inventory/inventory-list/inventory-list.component.html
+- [x] T015 [US1] Update inventory-list.component.ts to handle search results and empty state in frontend/src/app/inventory/inventory-list/inventory-list.component.ts
+- [x] T016 [US1] Create empty state component/template showing message when search returns no results in frontend/src/app/inventory/empty-state/empty-state.component.ts
 
 **Checkpoint**: User Story 1 complete and independently testable. Users can search items by name/description/SKU.
 

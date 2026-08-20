@@ -20,4 +20,9 @@ public interface InventoryItemService {
     InventoryItemResponseDTO restoreItem(Long userId, Long itemId);
 
     void deleteItem(Long userId, Long itemId);
+
+    Page<InventoryItemResponseDTO> searchItems(Long userId, String searchTerm, int page, int size);
+
+    Page<InventoryItemResponseDTO> filterItems(Long userId, Long categoryId, Long locationId,
+                                                 String status, String stockState, int page, int size);
 }

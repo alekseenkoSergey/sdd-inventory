@@ -1,0 +1,117 @@
+<div class="search-filter-container">
+  <div class="search-box">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (keyup)="onSearchKeyup($event)"
+      placeholder="Search by name, description, or SKU..."
+      class="search-input"
+    />
+    <button (click)="onSearch()" class="search-button">Search</button>
+  </div>
+
+  <div class="filters-container">
+    <div class="filter-group">
+      <label for="category-filter">Category:</label>
+      <select
+        id="category-filter"
+        [(ngModel)]="selectedCategory"
+        (change)="onFilterChange()"
+        class="filter-select"
+      >
+        <option [ngValue]="null">All Categories</option>
+        <option *ngFor="let cat of categories" [ngValue]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+      <button
+        *ngIf="selectedCategory"
+        (click)="clearCategoryFilter()"
+        class="clear-filter-button"
+        title="Clear category filter"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="filter-group">
+      <label for="location-filter">Location:</label>
+      <select
+        id="location-filter"
+        [(ngModel)]="selectedLocation"
+        (change)="onFilterChange()"
+        class="filter-select"
+      >
+        <option [ngValue]="null">All Locations</option>
+        <option *ngFor="let loc of locations" [ngValue]="loc.id">
+          {{ loc.name }}
+        </option>
+      </select>
+      <button
+        *ngIf="selectedLocation"
+        (click)="clearLocationFilter()"
+        class="clear-filter-button"
+        title="Clear location filter"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="filter-group">
+      <label for="status-filter">Status:</label>
+      <select
+        id="status-filter"
+        [(ngModel)]="selectedStatus"
+        (change)="onFilterChange()"
+        class="filter-select"
+      >
+        <option *ngFor="let opt of statusOptions" [value]="opt.value">
+          {{ opt.label }}
+        </option>
+      </select>
+      <button
+        *ngIf="selectedStatus !== 'ALL'"
+        (click)="clearStatusFilter()"
+        class="clear-filter-button"
+        title="Clear status filter"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="filter-group">
+      <label for="stock-state-filter">Stock State:</label>
+      <select
+        id="stock-state-filter"
+        [(ngModel)]="selectedStockState"
+        (change)="onFilterChange()"
+        class="filter-select"
+      >
+        <option *ngFor="let opt of stockStateOptions" [value]="opt.value">
+          {{ opt.label }}
+        </option>
+      </select>
+      <button
+        *ngIf="selectedStockState !== 'ALL'"
+        (click)="clearStockStateFilter()"
+        class="clear-filter-button"
+        title="Clear stock state filter"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-actions">
+    <div *ngIf="hasActiveFilters()" class="active-filters-indicator">
+      <span class="filter-badge">{{ (selectedCategory ? 1 : 0) + (selectedLocation ? 1 : 0) + (selectedStatus !== 'ALL' ? 1 : 0) + (selectedStockState !== 'ALL' ? 1 : 0) + (searchTerm.trim() ? 1 : 0) }} filter(s) active</span>
+    </div>
+    <button
+      *ngIf="hasActiveFilters()"
+      (click)="clearFilters()"
+      class="reset-button"
+    >
+      Clear All Filters
+    </button>
+  </div>
+</div>
