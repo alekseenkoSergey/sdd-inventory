@@ -4,9 +4,11 @@ import org.example.sddinventory.exception.CategoryHasItemsException;
 import org.example.sddinventory.exception.CategoryNameNotUniqueException;
 import org.example.sddinventory.exception.CategoryNotFoundException;
 import org.example.sddinventory.exception.InventoryItemNotFoundException;
+import org.example.sddinventory.exception.InvalidQuantityException;
 import org.example.sddinventory.exception.LocationHasItemsException;
 import org.example.sddinventory.exception.LocationNameNotUniqueException;
 import org.example.sddinventory.exception.LocationNotFoundException;
+import org.example.sddinventory.exception.NegativeQuantityException;
 import org.example.sddinventory.exception.SkuDuplicateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,6 +167,34 @@ public class GlobalExceptionHandler {
         body.put("timestamp", ZonedDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "SKU_DUPLICATE");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+    public ResponseEntity<?> handleInvalidQuantityException(InvalidQuantityException ex, WebRequest request) {
+        logger.warn("Invalid quantity: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "INVALID_QUANTITY");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NegativeQuantityException.class)
+    public ResponseEntity<?> handleNegativeQuantityException(NegativeQuantityException ex, WebRequest request) {
+        logger.warn("Negative quantity would result: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "NEGATIVE_QUANTITY");
         body.put("message", ex.getMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
 

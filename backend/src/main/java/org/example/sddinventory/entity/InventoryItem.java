@@ -173,4 +173,64 @@ public class InventoryItem {
     public void setUpdatedDate(Instant updatedDate) {
         this.updatedDate = updatedDate;
     }
+
+    public void updateCurrentQuantityFromMovement(StockMovement movement) {
+        switch (movement.getMovementType()) {
+            case OPENING_BALANCE:
+                this.currentQuantity = new BigDecimal(movement.getQuantity());
+                break;
+            case STOCK_IN:
+                this.currentQuantity = this.currentQuantity.add(new BigDecimal(movement.getQuantity()));
+                break;
+            case STOCK_OUT:
+                this.currentQuantity = this.currentQuantity.subtract(new BigDecimal(movement.getQuantity()));
+                break;
+            case ADJUSTMENT:
+                if (movement.getAdjustmentDirection() == AdjustmentDirection.INCREASE) {
+                    this.currentQuantity = this.currentQuantity.add(new BigDecimal(movement.getQuantity()));
+                } else {
+                    this.currentQuantity = this.currentQuantity.subtract(new BigDecimal(movement.getQuantity()));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported movement type: " + movement.getMovementType());
+        }
+    }
+
+    public BigDecimal validateMovement(StockMovement movement) {
+        BigDecimal newQuantity = this.currentQuantity;
+
+        switch (movement.getMovementType()) {
+            case OPENING_BALANCE:
+                newQuantity = new BigDecimal(movement.getQuantity());
+                break;
+            case STOCK_IN:
+                newQuantity = newQuantity.add(new BigDecimal(movement.getQuantity()));
+                break;
+            case STOCK_OUT:
+                newQuantity = newQuantity.subtract(new BigDecimal(movement.getQuantity()));
+                if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
+                    throw new IllegalArgumentException(
+                        String.format("Stock out of %d units would make quantity negative (current: %s)",
+                            movement.getQuantity(), this.currentQuantity)
+                    );
+                }
+                break;
+            case ADJUSTMENT:
+                if (movement.getAdjustmentDirection() == AdjustmentDirection.INCREASE) {
+                    newQuantity = newQuantity.add(new BigDecimal(movement.getQuantity()));
+                } else {
+                    newQuantity = newQuantity.subtract(new BigDecimal(movement.getQuantity()));
+                }
+                if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
+                    throw new IllegalArgumentException(
+                        String.format("Adjustment of %d would make quantity negative (current: %s)",
+                            movement.getQuantity(), this.currentQuantity)
+                    );
+                }
+                break;
+        }
+
+        return newQuantity;
+    }
 }

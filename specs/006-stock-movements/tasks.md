@@ -16,11 +16,11 @@
 
 **Purpose**: Project initialization and database schema foundation
 
-- [ ] T001 Create database migration for stock_movement table in `backend/src/main/resources/db/migration/V{next}__Create_stock_movement_table.sql`
-- [ ] T002 [P] Create MovementType enum in `backend/src/main/java/org/example/sddinventory/entity/MovementType.java`
-- [ ] T003 [P] Create AdjustmentDirection enum in `backend/src/main/java/org/example/sddinventory/entity/AdjustmentDirection.java`
-- [ ] T004 [P] Create validation exceptions in `backend/src/main/java/org/example/sddinventory/exception/InvalidQuantityException.java`
-- [ ] T005 [P] Create validation exceptions in `backend/src/main/java/org/example/sddinventory/exception/NegativeQuantityException.java`
+- [x] T001 Create database migration for stock_movement table in `backend/src/main/resources/db/migration/V{next}__Create_stock_movement_table.sql`
+- [x] T002 [P] Create MovementType enum in `backend/src/main/java/org/example/sddinventory/entity/MovementType.java`
+- [x] T003 [P] Create AdjustmentDirection enum in `backend/src/main/java/org/example/sddinventory/entity/AdjustmentDirection.java`
+- [x] T004 [P] Create validation exceptions in `backend/src/main/java/org/example/sddinventory/exception/InvalidQuantityException.java`
+- [x] T005 [P] Create validation exceptions in `backend/src/main/java/org/example/sddinventory/exception/NegativeQuantityException.java`
 
 ---
 
@@ -30,11 +30,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create StockMovement entity in `backend/src/main/java/org/example/sddinventory/entity/StockMovement.java` (with @PrePersist validation)
-- [ ] T007 Create StockMovementRequestDTO in `backend/src/main/java/org/example/sddinventory/model/StockMovementRequestDTO.java` (with validation annotations)
-- [ ] T008 Create StockMovementResponseDTO in `backend/src/main/java/org/example/sddinventory/model/StockMovementResponseDTO.java` (with fromEntity factory)
-- [ ] T009 Enhance Item entity with movement awareness in `backend/src/main/java/org/example/sddinventory/entity/Item.java` (add updateCurrentQuantityFromMovement and validateMovement methods)
-- [ ] T010 Create StockMovementRepository in `backend/src/main/java/org/example/sddinventory/repository/StockMovementRepository.java` (Spring Data interface with query methods)
+- [x] T006 Create StockMovement entity in `backend/src/main/java/org/example/sddinventory/entity/StockMovement.java` (with @PrePersist validation)
+- [x] T007 Create StockMovementRequestDTO in `backend/src/main/java/org/example/sddinventory/model/StockMovementRequestDTO.java` (with validation annotations)
+- [x] T008 Create StockMovementResponseDTO in `backend/src/main/java/org/example/sddinventory/model/StockMovementResponseDTO.java` (with fromEntity factory)
+- [x] T009 Enhance Item entity with movement awareness in `backend/src/main/java/org/example/sddinventory/entity/InventoryItem.java` (add updateCurrentQuantityFromMovement and validateMovement methods)
+- [x] T010 Create StockMovementRepository in `backend/src/main/java/org/example/sddinventory/repository/StockMovementRepository.java` (Spring Data interface with query methods)
 
 **Checkpoint**: Foundation ready - all models and repositories in place for user stories to begin
 
@@ -48,10 +48,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Create ItemService enhancement in `backend/src/main/java/org/example/sddinventory/service/ItemService.java` - add createOpeningBalanceMovement method (depends on T006)
-- [ ] T012 [US1] Implement StockMovementService in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` - create recordOpeningBalance method
-- [ ] T013 [US1] Integrate opening balance creation into item creation workflow - modify item creation endpoint to trigger T012 (depends on T012)
-- [ ] T014 [US1] Add unit tests for opening balance auto-creation in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test recordOpeningBalance with quantity > 0 and quantity = 0)
+- [x] T011 [P] [US1] Create ItemService enhancement in `backend/src/main/java/org/example/sddinventory/service/ItemService.java` - add createOpeningBalanceMovement method (depends on T006)
+- [x] T012 [US1] Implement StockMovementService in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` - create recordOpeningBalance method
+- [x] T013 [US1] Integrate opening balance creation into item creation workflow - modify item creation endpoint to trigger T012 (depends on T012)
+- [x] T014 [US1] Add unit tests for opening balance auto-creation in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test recordOpeningBalance with quantity > 0 and quantity = 0)
 - [ ] T015 [US1] Add integration test for item creation with opening balance in `backend/src/test/java/org/example/sddinventory/controller/ItemControllerTest.java` (verify movement history after item creation)
 
 **Checkpoint**: User Story 1 complete and independently testable - items can be created with automatic opening balance movements
@@ -66,12 +66,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Implement recordStockIn in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` (depends on T006, T009)
-- [ ] T017 [P] [US2] Create POST /items/{itemId}/movements endpoint in `backend/src/main/java/org/example/sddinventory/controller/StockMovementController.java` (depends on T012, T010)
-- [ ] T018 [US2] Add business logic for stock in quantity validation in StockMovementService - ensure quantity > 0 (depends on T016)
-- [ ] T019 [US2] Add unit tests for recordStockIn in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test quantity updates correctly)
+- [x] T016 [P] [US2] Implement recordStockIn in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` (depends on T006, T009)
+- [x] T017 [P] [US2] Create POST /items/{itemId}/movements endpoint in `backend/src/main/java/org/example/sddinventory/controller/StockMovementController.java` (depends on T012, T010)
+- [x] T018 [US2] Add business logic for stock in quantity validation in StockMovementService - ensure quantity > 0 (depends on T016)
+- [x] T019 [US2] Add unit tests for recordStockIn in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test quantity updates correctly)
 - [ ] T020 [US2] Add integration test for stock in endpoint in `backend/src/test/java/org/example/sddinventory/controller/StockMovementControllerTest.java` (POST /items/{id}/movements with STOCK_IN type)
-- [ ] T021 [US2] Add error handling for invalid stock in (quantity <= 0) - update exception handling in controller (depends on T017)
+- [x] T021 [US2] Add error handling for invalid stock in (quantity <= 0) - update exception handling in controller (depends on T017)
 
 **Checkpoint**: User Story 2 complete - stock in movements can be recorded and current quantity updated correctly
 
@@ -85,10 +85,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T022 [P] [US3] Implement recordStockOut in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with negative quantity prevention (depends on T006, T009)
-- [ ] T023 [US3] Add negative quantity validation in Item.validateMovement for STOCK_OUT type (depends on T009)
-- [ ] T024 [US3] Handle stock out error responses in controller - return 400 with error message when quantity would go negative (depends on T017)
-- [ ] T025 [US3] Add unit tests for recordStockOut in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test valid stock out and rejection cases)
+- [x] T022 [P] [US3] Implement recordStockOut in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with negative quantity prevention (depends on T006, T009)
+- [x] T023 [US3] Add negative quantity validation in Item.validateMovement for STOCK_OUT type (depends on T009)
+- [x] T024 [US3] Handle stock out error responses in controller - return 400 with error message when quantity would go negative (depends on T017)
+- [x] T025 [US3] Add unit tests for recordStockOut in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test valid stock out and rejection cases)
 - [ ] T026 [US3] Add integration test for stock out endpoint in `backend/src/test/java/org/example/sddinventory/controller/StockMovementControllerTest.java` (test valid and invalid stock out scenarios)
 - [ ] T027 [US3] Document error response format for negative quantity in `specs/006-stock-movements/contracts/stock-movement-api.md` (update API contract if needed)
 
@@ -104,11 +104,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T028 [P] [US4] Implement recordAdjustment in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with direction logic (depends on T006, T009)
-- [ ] T029 [US4] Add adjustment direction requirement validation - ensure direction present for ADJUSTMENT type (depends on T007)
-- [ ] T030 [US4] Add negative quantity validation for adjustment decrease in Item.validateMovement (depends on T009)
-- [ ] T031 [US4] Handle adjustment error responses - return 400 if direction missing or quantity would go negative (depends on T017)
-- [ ] T032 [US4] Add unit tests for recordAdjustment in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test increase, decrease, and error cases)
+- [x] T028 [P] [US4] Implement recordAdjustment in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with direction logic (depends on T006, T009)
+- [x] T029 [US4] Add adjustment direction requirement validation - ensure direction present for ADJUSTMENT type (depends on T007)
+- [x] T030 [US4] Add negative quantity validation for adjustment decrease in Item.validateMovement (depends on T009)
+- [x] T031 [US4] Handle adjustment error responses - return 400 if direction missing or quantity would go negative (depends on T017)
+- [x] T032 [US4] Add unit tests for recordAdjustment in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test increase, decrease, and error cases)
 - [ ] T033 [US4] Add integration test for adjustment endpoint in `backend/src/test/java/org/example/sddinventory/controller/StockMovementControllerTest.java` (test both directions and error scenarios)
 
 **Checkpoint**: User Story 4 complete - adjustments can be recorded with direction and proper validation
@@ -123,10 +123,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T034 [P] [US5] Implement getMovementHistory in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with optional date filtering (depends on T006, T010)
-- [ ] T035 [P] [US5] Create GET /items/{itemId}/movements endpoint in `backend/src/main/java/org/example/sddinventory/controller/StockMovementController.java` (depends on T017, T010)
-- [ ] T036 [US5] Add query method to StockMovementRepository for finding by itemId and date range (depends on T010)
-- [ ] T037 [US5] Ensure movements returned in chronological order (by createdDate ascending) in getMovementHistory (depends on T034)
+- [x] T034 [P] [US5] Implement getMovementHistory in `backend/src/main/java/org/example/sddinventory/service/StockMovementService.java` with optional date filtering (depends on T006, T010)
+- [x] T035 [P] [US5] Create GET /items/{itemId}/movements endpoint in `backend/src/main/java/org/example/sddinventory/controller/StockMovementController.java` (depends on T017, T010)
+- [x] T036 [US5] Add query method to StockMovementRepository for finding by itemId and date range (depends on T010)
+- [x] T037 [US5] Ensure movements returned in chronological order (by createdDate ascending) in getMovementHistory (depends on T034)
 - [ ] T038 [US5] Add unit tests for getMovementHistory in `backend/src/test/java/org/example/sddinventory/service/StockMovementServiceTest.java` (test with/without date filter, ordering)
 - [ ] T039 [US5] Add integration test for history endpoint in `backend/src/test/java/org/example/sddinventory/controller/StockMovementControllerTest.java` (GET /items/{id}/movements with optional filters)
 - [ ] T040 [US5] Add 404 handling for non-existent item in movement history endpoint (depends on T035)
