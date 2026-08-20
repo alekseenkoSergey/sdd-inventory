@@ -95,7 +95,7 @@ export class CurrentPageExtractPipe implements PipeTransform {
       </div>
 
       <!-- Modal for create/edit form -->
-      <div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
+      <div *ngIf="showForm" class="modal-overlay">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h2>{{ editingItem ? 'Edit Item' : 'Create New Item' }}</h2>
