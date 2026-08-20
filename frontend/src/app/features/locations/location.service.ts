@@ -8,7 +8,7 @@ import { Location, CreateLocationRequest, RenameLocationRequest, ErrorResponse }
   providedIn: 'root'
 })
 export class LocationService {
-  private apiUrl = '/api/locations';
+  private apiUrl = 'http://localhost:8080/api/locations';
   private httpOptions = {
     withCredentials: true
   };

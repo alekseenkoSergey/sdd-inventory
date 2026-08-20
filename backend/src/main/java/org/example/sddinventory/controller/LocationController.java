@@ -1,8 +1,10 @@
 package org.example.sddinventory.controller;
 
+import org.example.sddinventory.entity.User;
 import org.example.sddinventory.model.CreateLocationRequestDTO;
 import org.example.sddinventory.model.LocationResponseDTO;
 import org.example.sddinventory.model.RenameLocationRequestDTO;
+import org.example.sddinventory.service.AuthService;
 import org.example.sddinventory.service.LocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +22,19 @@ import java.util.List;
 public class LocationController {
     private static final Logger logger = LoggerFactory.getLogger(LocationController.class);
     private final LocationService locationService;
+    private final AuthService authService;
 
-    public LocationController(LocationService locationService) {
+    public LocationController(LocationService locationService, AuthService authService) {
         this.locationService = locationService;
+        this.authService = authService;
     }
 
     private Long extractUserId(Authentication authentication) {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        Object userId = oAuth2User.getAttributes().get("user_id");
-        if (userId != null) {
-            return ((Number) userId).longValue();
+        User currentUser = authService.getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("User not authenticated");
         }
-        throw new IllegalArgumentException("User ID not found in authentication");
+        return currentUser.getId();
     }
 
     @PostMapping
