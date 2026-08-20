@@ -25,7 +25,7 @@ import { takeUntil } from 'rxjs/operators';
             formControlName="quantity"
             class="form-control"
             placeholder="Enter quantity"
-            [disabled]="loading$ | async"
+            [disabled]="(loading$ | async) ?? false"
           />
           <div class="error-message" *ngIf="isFieldInvalid('quantity')">
             {{ getErrorMessage('quantity') }}
@@ -40,7 +40,7 @@ import { takeUntil } from 'rxjs/operators';
             class="form-control"
             placeholder="Enter reason for stock in (max 500 characters)"
             rows="3"
-            [disabled]="loading$ | async"
+            [disabled]="(loading$ | async) ?? false"
           ></textarea>
           <div class="error-message" *ngIf="isFieldInvalid('reason')">
             {{ getErrorMessage('reason') }}
@@ -54,7 +54,7 @@ import { takeUntil } from 'rxjs/operators';
             type="date"
             formControlName="movementDate"
             class="form-control"
-            [disabled]="loading$ | async"
+            [disabled]="(loading$ | async) ?? false"
           />
           <div class="error-message" *ngIf="isFieldInvalid('movementDate')">
             {{ getErrorMessage('movementDate') }}
@@ -73,7 +73,7 @@ import { takeUntil } from 'rxjs/operators';
             type="button"
             class="btn btn-secondary"
             (click)="onCancel()"
-            [disabled]="loading$ | async"
+            [disabled]="(loading$ | async) ?? false"
           >
             Cancel
           </button>
@@ -175,7 +175,6 @@ export class StockInFormComponent implements OnInit, OnDestroy {
   @Output() submit = new EventEmitter<StockMovement>();
 
   form: FormGroup;
-  loading$ = this.stockMovementService.loading$;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -188,6 +187,10 @@ export class StockInFormComponent implements OnInit, OnDestroy {
       reason: ['', [StockMovementValidators.reason()]],
       movementDate: ['', [StockMovementValidators.date()]]
     });
+  }
+
+  get loading$() {
+    return this.stockMovementService.loading$;
   }
 
   ngOnInit(): void {}

@@ -54,7 +54,7 @@ export class StockMovementService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    let params = {};
+    const params: { [key: string]: string } = {};
     if (startDate) params['startDate'] = startDate;
     if (endDate) params['endDate'] = endDate;
 

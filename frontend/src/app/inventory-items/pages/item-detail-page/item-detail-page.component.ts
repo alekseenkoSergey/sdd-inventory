@@ -153,7 +153,7 @@ import { NotificationService } from '../../../services/notification.service';
             <app-stock-in-form
               [itemId]="item.id"
               (close)="closeStockInForm()"
-              (submit)="onStockInSubmit($event)"
+              (submit)="onStockInSubmit()"
             ></app-stock-in-form>
           </div>
         </div>
@@ -171,7 +171,7 @@ import { NotificationService } from '../../../services/notification.service';
               [itemId]="item.id"
               [currentQuantity]="item.currentQuantity"
               (close)="closeStockOutForm()"
-              (submit)="onStockOutSubmit($event)"
+              (submit)="onStockOutSubmit()"
             ></app-stock-out-form>
           </div>
         </div>
@@ -189,14 +189,14 @@ import { NotificationService } from '../../../services/notification.service';
               [itemId]="item.id"
               [currentQuantity]="item.currentQuantity"
               (close)="closeAdjustmentForm()"
-              (submit)="onAdjustmentSubmit($event)"
+              (submit)="onAdjustmentSubmit()"
             ></app-adjustment-form>
           </div>
         </div>
       </div>
 
       <!-- Modal for movement history -->
-      <div *ngIf="showHistoryModal && item" class="modal-overlay" (click)="closeHistoryModal()">
+      <div *ngIf="showMovementHistoryModal && item" class="modal-overlay" (click)="closeHistoryModal()">
         <div class="modal-content modal-large" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h2>Movement History</h2>
@@ -445,11 +445,11 @@ import { NotificationService } from '../../../services/notification.service';
 })
 export class ItemDetailPageComponent implements OnInit {
   item: InventoryItem | null = null;
-  showForm = false;
-  showStockInModal = false;
-  showStockOutModal = false;
-  showAdjustmentModal = false;
-  showHistoryModal = false;
+  showForm: boolean = false;
+  showStockInModal: boolean = false;
+  showStockOutModal: boolean = false;
+  showAdjustmentModal: boolean = false;
+  showMovementHistoryModal: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -536,11 +536,11 @@ export class ItemDetailPageComponent implements OnInit {
   }
 
   showHistoryModal(): void {
-    this.showHistoryModal = true;
+    this.showMovementHistoryModal = true;
   }
 
   closeHistoryModal(): void {
-    this.showHistoryModal = false;
+    this.showMovementHistoryModal = false;
   }
 
   private refreshItem(): void {

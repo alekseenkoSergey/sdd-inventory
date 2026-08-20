@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockMovementService } from '../../services/stock-movement.service';
 import { DisplayModelService, DisplayMovement } from '../shared/display-model.service';
 import { Subject } from 'rxjs';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs/operators';
                 type="date"
                 formControlName="startDate"
                 class="form-control"
-                [disabled]="loading$ | async"
+                [disabled]="(loading$ | async) ?? false"
               />
             </div>
             <div class="filter-group">
@@ -34,14 +34,14 @@ import { takeUntil } from 'rxjs/operators';
                 type="date"
                 formControlName="endDate"
                 class="form-control"
-                [disabled]="loading$ | async"
+                [disabled]="(loading$ | async) ?? false"
               />
             </div>
             <div class="filter-actions">
               <button
                 type="submit"
                 class="btn btn-small btn-primary"
-                [disabled]="loading$ | async"
+                [disabled]="(loading$ | async) ?? false"
               >
                 Apply Filter
               </button>
@@ -49,7 +49,7 @@ import { takeUntil } from 'rxjs/operators';
                 type="button"
                 class="btn btn-small btn-secondary"
                 (click)="onClearFilter()"
-                [disabled]="loading$ | async"
+                [disabled]="(loading$ | async) ?? false"
               >
                 Clear
               </button>
@@ -321,7 +321,6 @@ export class MovementHistoryModalComponent implements OnInit, OnDestroy {
   @Input() itemId!: number;
   @Output() close = new EventEmitter<void>();
 
-  loading$ = this.stockMovementService.loading$;
   movements: DisplayMovement[] = [];
   filterForm: FormGroup;
   hasFilters = false;
@@ -336,6 +335,10 @@ export class MovementHistoryModalComponent implements OnInit, OnDestroy {
       startDate: [''],
       endDate: ['']
     });
+  }
+
+  get loading$() {
+    return this.stockMovementService.loading$;
   }
 
   ngOnInit(): void {
@@ -365,8 +368,8 @@ export class MovementHistoryModalComponent implements OnInit, OnDestroy {
   }
 
   onApplyFilter(): void {
-    const startDate = this.filterForm.get('startDate')?.value;
-    const endDate = this.filterForm.get('endDate')?.value;
+    const startDate = this.filterForm.get('startDate')?.value || '';
+    const endDate = this.filterForm.get('endDate')?.value || '';
 
     this.hasFilters = !!(startDate || endDate);
 
