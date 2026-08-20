@@ -43,10 +43,6 @@ export class LocationListComponent implements OnInit {
     });
   }
 
-  openCreateForm(): void {
-    this.editingLocationId = null;
-    this.showForm = true;
-  }
 
   openEditForm(location: Location): void {
     this.editingLocationId = location.id;

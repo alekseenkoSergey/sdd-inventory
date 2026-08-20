@@ -7,11 +7,33 @@
         </svg>
       </button>
       <h1>Manage Locations</h1>
-      <div class="spacer"></div>
+      <button class="create-btn" (click)="openCreateDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Create Location
+      </button>
     </div>
   </header>
 
   <main class="page-content">
     <app-location-list></app-location-list>
   </main>
+
+  <!-- Create Location Dialog -->
+  <div class="dialog-overlay" *ngIf="showCreateDialog" (click)="closeCreateDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Create New Location</h2>
+        <button class="close-btn" (click)="closeCreateDialog()">×</button>
+      </div>
+      <app-location-form
+        [locationId]="editingLocationId"
+        (locationCreated)="onLocationCreated($event)"
+        (locationUpdated)="onLocationUpdated($event)"
+        (closed)="closeCreateDialog()">
+      </app-location-form>
+    </div>
+  </div>
 </div>

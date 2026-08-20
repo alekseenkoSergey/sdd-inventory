@@ -52,8 +52,12 @@ export class CurrentPageExtractPipe implements PipeTransform {
             </svg>
           </button>
           <h1>Inventory Items</h1>
-          <button (click)="showCreateForm()" class="btn btn-primary">
-            + Create New Item
+          <button (click)="showCreateForm()" class="create-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create Item
           </button>
         </div>
       </header>
@@ -240,23 +244,28 @@ export class CurrentPageExtractPipe implements PipeTransform {
       color: #111827;
     }
 
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .btn-primary {
+    .create-btn {
       background-color: #4f46e5;
       color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       transition: background-color 0.2s;
     }
 
-    .btn-primary:hover {
+    .create-btn:hover {
       background-color: #4338ca;
+    }
+
+    .create-btn svg {
+      width: 20px;
+      height: 20px;
     }
 
     .modal-overlay {

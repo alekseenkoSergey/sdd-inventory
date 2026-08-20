@@ -4,13 +4,6 @@
   margin: 0 auto;
 }
 
-.location-list-header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 .loading {
   text-align: center;
   padding: 40px;
@@ -106,11 +99,6 @@
 }
 
 @media (max-width: 768px) {
-  .location-list-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-
   .btn-sm {
     margin-bottom: 5px;
     width: 100%;
