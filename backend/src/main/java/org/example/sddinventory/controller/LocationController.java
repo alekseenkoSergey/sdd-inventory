@@ -30,11 +30,31 @@ public class LocationController {
     }
 
     private Long extractUserId(Authentication authentication) {
-        User currentUser = authService.getCurrentUser();
-        if (currentUser == null) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalArgumentException("User not authenticated");
         }
-        return currentUser.getId();
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof OAuth2User) {
+            OAuth2User oAuth2User = (OAuth2User) principal;
+            String providerUserId = oAuth2User.getAttribute("sub");
+            String provider = "Google";
+
+            User user = authService.createOrGetUser(
+                provider,
+                providerUserId,
+                oAuth2User.getAttribute("email"),
+                oAuth2User.getAttribute("name"),
+                oAuth2User.getAttribute("picture")
+            );
+
+            if (user == null) {
+                throw new IllegalArgumentException("Failed to authenticate user");
+            }
+            return user.getId();
+        }
+
+        throw new IllegalArgumentException("User not authenticated");
     }
 
     @PostMapping

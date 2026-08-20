@@ -16,11 +16,17 @@ export interface InventoryItem {
 export interface Category {
   id: number;
   name: string;
+  itemCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Location {
   id: number;
   name: string;
+  userId?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateItemFormModel {

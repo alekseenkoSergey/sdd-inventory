@@ -63,6 +63,7 @@ export class SearchFilterComponent implements OnInit {
   loadCategories(): void {
     this.inventoryService.loadCategories().subscribe({
       next: (categories) => {
+        console.log('Categories loaded:', categories);
         this.categories = categories;
       },
       error: (err) => {
@@ -74,6 +75,7 @@ export class SearchFilterComponent implements OnInit {
   loadLocations(): void {
     this.inventoryService.loadLocations().subscribe({
       next: (locations) => {
+        console.log('Locations loaded:', locations);
         this.locations = locations;
       },
       error: (err) => {
