@@ -39,8 +39,8 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     Page<InventoryItem> searchByMultipleFields(Long userId, String searchTerm, Pageable pageable);
 
     @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 " +
-           "AND (?2 IS NULL OR i.category.id = ?2) " +
-           "AND (?3 IS NULL OR i.location.id = ?3) " +
+           "AND (?2 IS NULL OR i.categoryId = ?2) " +
+           "AND (?3 IS NULL OR i.locationId = ?3) " +
            "ORDER BY i.createdDate DESC")
     Page<InventoryItem> filterByCategoryAndLocation(Long userId, Long categoryId, Long locationId, Pageable pageable);
 

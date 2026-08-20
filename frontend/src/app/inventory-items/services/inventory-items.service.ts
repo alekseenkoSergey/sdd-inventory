@@ -199,10 +199,16 @@ export class InventoryItemsService {
   applySearchAndFilters(search?: string, categoryId?: number, locationId?: number,
                        statusFilter?: string, stockState?: string): void {
     const current = this.filtersSubject.value;
+
+    let validStatus: 'ACTIVE' | 'ARCHIVED' | null = null;
+    if (statusFilter === 'ACTIVE' || statusFilter === 'ARCHIVED') {
+      validStatus = statusFilter;
+    }
+
     this.filtersSubject.next({
       page: 0,
       size: current.size,
-      status: statusFilter || null,
+      status: validStatus,
       categoryId: categoryId || null,
       search: search || null,
       locationId: locationId || null,

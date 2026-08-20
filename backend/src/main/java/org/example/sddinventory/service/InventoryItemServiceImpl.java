@@ -15,12 +15,14 @@ import org.example.sddinventory.repository.LocationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class InventoryItemServiceImpl implements InventoryItemService {
@@ -237,7 +239,7 @@ public class InventoryItemServiceImpl implements InventoryItemService {
             userId, categoryId, locationId, status, stockState, page, size);
         Pageable pageable = PageRequest.of(page, size);
 
-        ItemStatus itemStatus = null;
+        ItemStatus itemStatus;
         if (status != null && !status.equalsIgnoreCase("ALL")) {
             try {
                 itemStatus = ItemStatus.valueOf(status.toUpperCase());
@@ -245,17 +247,14 @@ public class InventoryItemServiceImpl implements InventoryItemService {
                 logger.warn("Invalid status provided: {}", status);
                 itemStatus = null;
             }
+        } else {
+            itemStatus = null;
         }
 
         Page<InventoryItem> results = inventoryItemRepository.filterByCategoryAndLocation(userId, categoryId, locationId, pageable);
 
         if (itemStatus != null) {
-            results = results.map(item -> {
-                if (item.getStatus() == itemStatus) {
-                    return item;
-                }
-                return null;
-            }).filter(item -> item != null);
+            results = applyStatusFilter(results, itemStatus);
         }
 
         if (stockState != null && !stockState.equalsIgnoreCase("ALL")) {
@@ -265,19 +264,28 @@ public class InventoryItemServiceImpl implements InventoryItemService {
         return results.map(this::convertToDTO);
     }
 
+    private Page<InventoryItem> applyStatusFilter(Page<InventoryItem> items, ItemStatus status) {
+        List<InventoryItem> filtered = items.getContent().stream()
+            .filter(item -> item.getStatus() == status)
+            .toList();
+        return new PageImpl<>(filtered, items.getPageable(), filtered.size());
+    }
+
     private Page<InventoryItem> applyStockStateFilter(Page<InventoryItem> items, String stockState) {
-        return items.map(item -> {
-            boolean matches = false;
-            if ("OUT_OF_STOCK".equalsIgnoreCase(stockState)) {
-                matches = item.getCurrentQuantity().signum() == 0;
-            } else if ("LOW_STOCK".equalsIgnoreCase(stockState)) {
-                matches = item.getCurrentQuantity().signum() > 0 &&
-                    item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) <= 0;
-            } else if ("IN_STOCK".equalsIgnoreCase(stockState)) {
-                matches = item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) > 0;
-            }
-            return matches ? item : null;
-        }).filter(item -> item != null);
+        List<InventoryItem> filtered = items.getContent().stream()
+            .filter(item -> {
+                if ("OUT_OF_STOCK".equalsIgnoreCase(stockState)) {
+                    return item.getCurrentQuantity().signum() == 0;
+                } else if ("LOW_STOCK".equalsIgnoreCase(stockState)) {
+                    return item.getCurrentQuantity().signum() > 0 &&
+                        item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) <= 0;
+                } else if ("IN_STOCK".equalsIgnoreCase(stockState)) {
+                    return item.getCurrentQuantity().compareTo(item.getLowStockThreshold()) > 0;
+                }
+                return false;
+            })
+            .toList();
+        return new PageImpl<>(filtered, items.getPageable(), filtered.size());
     }
 
     private InventoryItemResponseDTO convertToDTO(InventoryItem item) {
