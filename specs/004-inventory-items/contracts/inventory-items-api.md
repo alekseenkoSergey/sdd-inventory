@@ -29,8 +29,8 @@ REST API endpoints for inventory item management. All endpoints enforce user dat
   "name": "Widget A",
   "description": "Premium widget variant",
   "sku": "SKU-001",
-  "categoryId": "550e8400-e29b-41d4-a716-446655440000",
-  "locationId": "550e8400-e29b-41d4-a716-446655440001",
+  "categoryId": 1,
+  "locationId": 2,
   "unit": "pcs",
   "lowStockThreshold": 10,
   "initialQuantity": 100
@@ -44,8 +44,8 @@ REST API endpoints for inventory item management. All endpoints enforce user dat
 | `name` | String | Yes | Non-empty, max 255 | Item name |
 | `description` | String | No | Max 1000 chars | Optional notes |
 | `sku` | String | No | Max 100, unique per user | Optional item code |
-| `categoryId` | UUID | Yes | Must belong to requesting user | Category reference |
-| `locationId` | UUID | Yes | Must belong to requesting user | Location reference |
+| `categoryId` | Long | Yes | Must exist in category table; must belong to requesting user | Category reference (validated on backend) |
+| `locationId` | Long | Yes | Must exist in location table; must belong to requesting user | Location reference (validated on backend) |
 | `unit` | String | Yes | Max 50 chars | Unit of measure |
 | `lowStockThreshold` | Decimal | No | >= 0, default 0 | Low-stock alert threshold |
 | `initialQuantity` | Decimal | No | >= 0, default 0 | Opening quantity (creates stock movement if > 0) |
@@ -54,12 +54,12 @@ REST API endpoints for inventory item management. All endpoints enforce user dat
 
 ```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440002",
+  "id": 123,
   "name": "Widget A",
   "description": "Premium widget variant",
   "sku": "SKU-001",
-  "categoryId": "550e8400-e29b-41d4-a716-446655440000",
-  "locationId": "550e8400-e29b-41d4-a716-446655440001",
+  "categoryId": 1,
+  "locationId": 2,
   "currentQuantity": 100,
   "unit": "pcs",
   "lowStockThreshold": 10,
@@ -73,12 +73,12 @@ REST API endpoints for inventory item management. All endpoints enforce user dat
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `id` | UUID | Unique identifier (auto-generated) |
+| `id` | Long | Unique identifier (auto-generated, IDENTITY) |
 | `name` | String | Item name |
 | `description` | String | Optional description |
 | `sku` | String | Optional SKU code |
-| `categoryId` | UUID | Category reference |
-| `locationId` | UUID | Location reference |
+| `categoryId` | Long | Category reference (Long ID matching Category entity) |
+| `locationId` | Long | Location reference (Long ID matching Location entity) |
 | `currentQuantity` | Decimal | Current stock (auto-calculated) |
 | `unit` | String | Unit of measure |
 | `lowStockThreshold` | Decimal | Low-stock threshold |
@@ -200,8 +200,8 @@ Same as Create response (see InventoryItemResponseDTO above).
 | `name` | String | No | Non-empty if provided, max 255 | Item name |
 | `description` | String | No | Max 1000 chars | Optional notes |
 | `sku` | String | No | Max 100, unique per user | Optional item code |
-| `categoryId` | UUID | No | Must belong to requesting user | Category reference |
-| `locationId` | UUID | No | Must belong to requesting user | Location reference |
+| `categoryId` | Long | No | Must exist in category table; must belong to requesting user | Category reference (validated on backend) |
+| `locationId` | Long | No | Must exist in location table; must belong to requesting user | Location reference (validated on backend) |
 | `unit` | String | No | Max 50 chars | Unit of measure |
 | `lowStockThreshold` | Decimal | No | >= 0 | Low-stock threshold |
 | **NOT INCLUDED** | | | | `currentQuantity` is read-only; use stock movements API |

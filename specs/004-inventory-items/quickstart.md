@@ -47,9 +47,11 @@ curl -X GET http://localhost:8080/api/v1/locations \
 Store these in environment variables:
 
 ```bash
-CATEGORY_ID="550e8400-e29b-41d4-a716-446655440000"
-LOCATION_ID="550e8400-e29b-41d4-a716-446655440001"
+CATEGORY_ID="1"
+LOCATION_ID="2"
 ```
+
+Note: Category and Location IDs are `Long` type (integers), not UUIDs.
 
 ---
 

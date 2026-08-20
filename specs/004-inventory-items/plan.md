@@ -83,30 +83,35 @@ This feature adds to the existing backend structure:
 
 ```text
 backend/
-├── src/main/java/com/inventory/
+├── src/main/java/org/example/sddinventory/
 │   ├── model/
 │   │   ├── InventoryItemRequestDTO.java
 │   │   ├── InventoryItemResponseDTO.java
 │   │   └── InventoryItemPatchDTO.java
 │   ├── entity/
-│   │   └── InventoryItem.java
+│   │   ├── InventoryItem.java
+│   │   └── ItemStatus.java
 │   ├── controller/
 │   │   └── InventoryItemController.java
 │   ├── service/
-│   │   └── InventoryItemService.java
-│   └── repository/
-│       └── InventoryItemRepository.java
+│   │   ├── InventoryItemService.java
+│   │   └── InventoryItemServiceImpl.java
+│   ├── repository/
+│   │   └── InventoryItemRepository.java
+│   ├── config/
+│   │   └── (existing config files)
+│   ├── exception/
+│   │   └── (existing exception handling)
+│   └── (other existing packages)
 │
 ├── src/main/resources/db/migration/
-│   └── V[N]__Create_inventory_items_table.sql
+│   └── V5__Create_inventory_items_table.sql
 │
-└── src/test/java/com/inventory/
-    ├── unit/
-    │   └── service/
-    │       └── InventoryItemServiceTest.java
-    ├── integration/
-    │   └── controller/
-    │       └── InventoryItemControllerTest.java
+└── src/test/java/org/example/sddinventory/
+    ├── service/
+    │   └── InventoryItemServiceTest.java
+    ├── controller/
+    │   └── InventoryItemControllerTest.java
     └── contract/
         └── InventoryItemApiContractTest.java
 ```
@@ -154,6 +159,18 @@ backend/
 **Rationale**: Prevents accidental cross-user access. Per FR-015 and SC-005.
 
 **Implementation**: Service methods receive user ID from Spring Security context. Repository methods include user_id in WHERE clauses. Category/location validation also checks user_id ownership.
+
+### Category and Location ID Validation
+
+**Decision**: Validate that provided categoryId and locationId exist in the database and belong to the authenticated user before creating or updating items.
+
+**Rationale**: Prevents orphaned foreign keys and enforces referential integrity. Existing Category and Location entities use `Long` (not UUID) for IDs.
+
+**Implementation**: 
+- InventoryItemService validates both categoryId and locationId using CategoryRepository and LocationRepository (injected dependencies)
+- Queries must verify: (1) entity exists, (2) entity.userId == currentUser.id
+- Throw exception (CATEGORY_NOT_FOUND or LOCATION_NOT_FOUND) if validation fails
+- IDs are type `Long` matching existing Category and Location entities
 
 ## Complexity Tracking
 

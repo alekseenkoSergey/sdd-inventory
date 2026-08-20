@@ -12,13 +12,13 @@ Represents an inventory item belonging to a user. The core domain entity for thi
 
 | Field | Type | Constraints | Notes |
 |-------|------|-----------|-------|
-| `id` | UUID / Long | Primary Key, auto-generated | Unique identifier |
-| `userId` | UUID / Long | Foreign Key (User), NOT NULL, indexed | User who owns this item. Enforces data isolation |
+| `id` | Long | Primary Key, auto-generated (IDENTITY) | Unique identifier |
+| `userId` | Long | Foreign Key (User), NOT NULL, indexed | User who owns this item. Enforces data isolation |
 | `name` | String | NOT NULL, max 255 chars | Item name. May be duplicated (not unique) |
 | `description` | String | Nullable, max 1000 chars | Optional item description or notes |
 | `sku` | String | Nullable, max 100 chars, unique per (userId, sku) | Optional item code. Unique within user's inventory when provided |
-| `categoryId` | UUID / Long | Foreign Key (Category), NOT NULL, indexed | Category this item belongs to. Must belong to same user |
-| `locationId` | UUID / Long | Foreign Key (Location), NOT NULL, indexed | Storage location. Must belong to same user |
+| `categoryId` | Long | Foreign Key (Category), NOT NULL, indexed | Category this item belongs to. Must belong to same user. Must exist in category table |
+| `locationId` | Long | Foreign Key (Location), NOT NULL, indexed | Storage location. Must belong to same user. Must exist in location table |
 | `currentQuantity` | Decimal / Long | NOT NULL, default 0, >= 0 | Current stock quantity. Never negative. Only changed via StockMovement |
 | `unit` | String | NOT NULL, max 50 chars | Unit of measure (e.g., "pcs", "boxes", "kg", "liters") |
 | `lowStockThreshold` | Decimal / Long | NOT NULL, default 0, >= 0 | Threshold for low-stock alerts. Never negative |
@@ -58,25 +58,20 @@ ACTIVE ←→ ARCHIVED
 
 ```sql
 CREATE TABLE inventory_item (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id),
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(1000),
     sku VARCHAR(100),
-    category_id UUID NOT NULL REFERENCES category(id),
-    location_id UUID NOT NULL REFERENCES location(id),
+    category_id BIGINT NOT NULL REFERENCES category(id),
+    location_id BIGINT NOT NULL REFERENCES location(id),
     current_quantity DECIMAL(15,2) NOT NULL DEFAULT 0 CHECK (current_quantity >= 0),
     unit VARCHAR(50) NOT NULL,
     low_stock_threshold DECIMAL(15,2) NOT NULL DEFAULT 0 CHECK (low_stock_threshold >= 0),
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_category_user CHECK (
-        -- Validated at application level: category must belong to same user
-    ),
-    CONSTRAINT fk_location_user CHECK (
-        -- Validated at application level: location must belong to same user
-    )
+    updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    -- Note: user_id, category_id, location_id, and ownership validation enforced at application level
 );
 
 -- Indexes for query performance
@@ -97,11 +92,11 @@ CREATE UNIQUE INDEX idx_inventory_item_user_sku
 @Table(name = "inventory_item")
 public class InventoryItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(nullable = false)
-    private UUID userId;
+    private Long userId;
     
     @Column(nullable = false, length = 255)
     private String name;
@@ -113,10 +108,10 @@ public class InventoryItem {
     private String sku;
     
     @Column(nullable = false)
-    private UUID categoryId;
+    private Long categoryId;
     
     @Column(nullable = false)
-    private UUID locationId;
+    private Long locationId;
     
     @Column(nullable = false)
     @Digits(integer = 13, fraction = 2)
