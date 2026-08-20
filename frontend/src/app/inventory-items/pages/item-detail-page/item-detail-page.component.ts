@@ -6,6 +6,11 @@ import { InventoryItem, Category, Location, EditItemFormModel } from '../../mode
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { ItemFormComponent } from '../../components/item-form/item-form.component';
+import { StockInFormComponent } from '../../../stock-movements/movement-form/stock-in-form.component';
+import { StockOutFormComponent } from '../../../stock-movements/movement-form/stock-out-form.component';
+import { AdjustmentFormComponent } from '../../../stock-movements/movement-form/adjustment-form.component';
+import { MovementHistoryModalComponent } from '../../../stock-movements/movement-history-modal/movement-history-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-item-detail-page',
@@ -14,7 +19,11 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
     CommonModule,
     LoadingSpinnerComponent,
     ErrorMessageComponent,
-    ItemFormComponent
+    ItemFormComponent,
+    StockInFormComponent,
+    StockOutFormComponent,
+    AdjustmentFormComponent,
+    MovementHistoryModalComponent
   ],
   template: `
     <div class="item-detail-page">
@@ -39,6 +48,10 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
               {{ item.status === 'ARCHIVED' ? 'Restore' : 'Archive' }}
             </button>
             <button (click)="onDelete()" class="btn btn-danger">Delete</button>
+            <button (click)="showStockInForm()" class="btn btn-secondary">Record Stock In</button>
+            <button (click)="showStockOutForm()" class="btn btn-secondary">Record Stock Out</button>
+            <button (click)="showAdjustmentForm()" class="btn btn-secondary">Record Adjustment</button>
+            <button (click)="showHistoryModal()" class="btn btn-info">View History</button>
           </div>
         </div>
 
@@ -125,6 +138,75 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
               (save)="onSave($event)"
               (cancel)="closeForm()"
             ></app-item-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for stock in form -->
+      <div *ngIf="showStockInModal && item" class="modal-overlay" (click)="closeStockInForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Stock In</h2>
+            <button (click)="closeStockInForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-stock-in-form
+              [itemId]="item.id"
+              (close)="closeStockInForm()"
+              (submit)="onStockInSubmit($event)"
+            ></app-stock-in-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for stock out form -->
+      <div *ngIf="showStockOutModal && item" class="modal-overlay" (click)="closeStockOutForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Stock Out</h2>
+            <button (click)="closeStockOutForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-stock-out-form
+              [itemId]="item.id"
+              [currentQuantity]="item.currentQuantity"
+              (close)="closeStockOutForm()"
+              (submit)="onStockOutSubmit($event)"
+            ></app-stock-out-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for adjustment form -->
+      <div *ngIf="showAdjustmentModal && item" class="modal-overlay" (click)="closeAdjustmentForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Adjustment</h2>
+            <button (click)="closeAdjustmentForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-adjustment-form
+              [itemId]="item.id"
+              [currentQuantity]="item.currentQuantity"
+              (close)="closeAdjustmentForm()"
+              (submit)="onAdjustmentSubmit($event)"
+            ></app-adjustment-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for movement history -->
+      <div *ngIf="showHistoryModal && item" class="modal-overlay" (click)="closeHistoryModal()">
+        <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Movement History</h2>
+            <button (click)="closeHistoryModal()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-movement-history-modal
+              [itemId]="item.id"
+              (close)="closeHistoryModal()"
+            ></app-movement-history-modal>
           </div>
         </div>
       </div>
@@ -335,16 +417,45 @@ import { ItemFormComponent } from '../../components/item-form/item-form.componen
     .modal-body {
       padding: 1.5rem;
     }
+
+    .modal-large {
+      max-width: 900px;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-info {
+      background-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+      background-color: #138496;
+    }
+
+    .detail-actions {
+      flex-wrap: wrap;
+    }
   `]
 })
 export class ItemDetailPageComponent implements OnInit {
   item: InventoryItem | null = null;
   showForm = false;
+  showStockInModal = false;
+  showStockOutModal = false;
+  showAdjustmentModal = false;
+  showHistoryModal = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: InventoryItemsService
+    private service: InventoryItemsService,
+    private notificationService: NotificationService
   ) {}
 
   get loading$() { return this.service.loading$; }
@@ -382,6 +493,62 @@ export class ItemDetailPageComponent implements OnInit {
         this.item = updated;
         this.closeForm();
       });
+    }
+  }
+
+  showStockInForm(): void {
+    this.showStockInModal = true;
+  }
+
+  closeStockInForm(): void {
+    this.showStockInModal = false;
+  }
+
+  onStockInSubmit(): void {
+    this.closeStockInForm();
+    this.refreshItem();
+  }
+
+  showStockOutForm(): void {
+    this.showStockOutModal = true;
+  }
+
+  closeStockOutForm(): void {
+    this.showStockOutModal = false;
+  }
+
+  onStockOutSubmit(): void {
+    this.closeStockOutForm();
+    this.refreshItem();
+  }
+
+  showAdjustmentForm(): void {
+    this.showAdjustmentModal = true;
+  }
+
+  closeAdjustmentForm(): void {
+    this.showAdjustmentModal = false;
+  }
+
+  onAdjustmentSubmit(): void {
+    this.closeAdjustmentForm();
+    this.refreshItem();
+  }
+
+  showHistoryModal(): void {
+    this.showHistoryModal = true;
+  }
+
+  closeHistoryModal(): void {
+    this.showHistoryModal = false;
+  }
+
+  private refreshItem(): void {
+    if (this.item) {
+      this.service.getItem(this.item.id).subscribe(
+        updated => (this.item = updated),
+        () => this.notificationService.error('Failed to refresh item')
+      );
     }
   }
 
