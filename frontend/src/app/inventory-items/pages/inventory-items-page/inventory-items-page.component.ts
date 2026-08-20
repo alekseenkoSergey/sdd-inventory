@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { InventoryItemsService } from '../../services/inventory-items.service';
 import { InventoryItem, Category, Location, CreateItemFormModel, ItemFilters } from '../../models/inventory-item.model';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
@@ -33,12 +34,19 @@ export class CurrentPageExtractPipe implements PipeTransform {
   ],
   template: `
     <div class="inventory-items-page">
-      <div class="page-header">
-        <h1>Inventory Items</h1>
-        <button (click)="showCreateForm()" class="btn btn-primary">
-          + Create New Item
-        </button>
-      </div>
+      <header class="page-header">
+        <div class="header-content">
+          <button class="back-btn" (click)="goBack()" title="Back to Home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h1>Inventory Items</h1>
+          <button (click)="showCreateForm()" class="btn btn-primary">
+            + Create New Item
+          </button>
+        </div>
+      </header>
 
       <app-error-message
         [error]="error$ | async"
@@ -85,37 +93,75 @@ export class CurrentPageExtractPipe implements PipeTransform {
   `,
   styles: [`
     .inventory-items-page {
-      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f9fafb;
     }
 
     .page-header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 1rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      justify-content: space-between;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover {
+      color: #374151;
+    }
+
+    .back-btn svg {
+      width: 24px;
+      height: 24px;
     }
 
     .page-header h1 {
+      flex: 1;
       margin: 0;
-      color: #333;
+      padding: 0 2rem;
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #111827;
     }
 
     .btn {
       padding: 0.75rem 1.5rem;
       border: none;
-      border-radius: 4px;
+      border-radius: 0.375rem;
       cursor: pointer;
       font-size: 1rem;
       font-weight: 500;
     }
 
     .btn-primary {
-      background-color: #3498db;
+      background-color: #4f46e5;
       color: white;
+      transition: background-color 0.2s;
     }
 
     .btn-primary:hover {
-      background-color: #2980b9;
+      background-color: #4338ca;
     }
 
     .modal-overlay {
@@ -126,50 +172,52 @@ export class CurrentPageExtractPipe implements PipeTransform {
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.5);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       z-index: 1000;
     }
 
     .modal-content {
       background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
       max-width: 600px;
       width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
+      padding: 0;
     }
 
     .modal-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       padding: 1.5rem;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .modal-header h2 {
       margin: 0;
-      color: #333;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
     }
 
     .close-button {
       background: none;
       border: none;
-      font-size: 2rem;
+      font-size: 1.5rem;
       cursor: pointer;
-      color: #999;
+      color: #6b7280;
       padding: 0;
-      width: 40px;
-      height: 40px;
+      width: 2rem;
+      height: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: color 0.2s;
     }
 
     .close-button:hover {
-      color: #333;
+      color: #111827;
     }
 
     .modal-body {
@@ -181,7 +229,10 @@ export class InventoryItemsPageComponent implements OnInit {
   showForm = false;
   editingItem: InventoryItem | undefined;
 
-  constructor(private service: InventoryItemsService) {}
+  constructor(
+    private service: InventoryItemsService,
+    private router: Router
+  ) {}
 
   get items$() { return this.service.items$; }
   get loading$() { return this.service.loading$; }
@@ -244,5 +295,9 @@ export class InventoryItemsPageComponent implements OnInit {
 
   onRetry(): void {
     this.service.listItems().subscribe();
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 }

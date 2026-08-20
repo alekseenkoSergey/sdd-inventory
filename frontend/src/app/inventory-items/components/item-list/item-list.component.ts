@@ -83,7 +83,6 @@ import { InventoryItem } from '../../models/inventory-item.model';
 
     tr.archived {
       opacity: 0.6;
-      text-decoration: line-through;
     }
 
     .quantity {
