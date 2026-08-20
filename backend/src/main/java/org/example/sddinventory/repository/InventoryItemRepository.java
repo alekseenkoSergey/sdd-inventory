@@ -5,8 +5,10 @@ import org.example.sddinventory.entity.ItemStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +23,8 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     @Query("SELECT i FROM InventoryItem i WHERE i.userId = ?1 ORDER BY i.createdDate DESC")
     Page<InventoryItem> findByUserId(Long userId, Pageable pageable);
 
+    @Modifying
+    @Transactional
     @Query("DELETE FROM InventoryItem i WHERE i.id = ?1 AND i.userId = ?2")
     void deleteByIdAndUserId(Long id, Long userId);
 
