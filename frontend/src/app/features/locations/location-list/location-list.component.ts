@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { LocationService } from '../location.service';
@@ -19,7 +19,7 @@ export class LocationListComponent implements OnInit {
   showForm = false;
   editingLocationId: number | null = null;
 
-  constructor(private locationService: LocationService) { }
+  constructor(private locationService: LocationService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadLocations();
@@ -33,10 +33,12 @@ export class LocationListComponent implements OnInit {
       next: (locations) => {
         this.locations = locations;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage = error.message;
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -57,6 +59,7 @@ export class LocationListComponent implements OnInit {
 
   onLocationCreated(location: Location): void {
     this.locations.push(location);
+    this.cdr.markForCheck();
     this.closeForm();
   }
 
@@ -65,6 +68,7 @@ export class LocationListComponent implements OnInit {
     if (index !== -1) {
       this.locations[index] = location;
     }
+    this.cdr.markForCheck();
     this.closeForm();
   }
 
@@ -78,10 +82,12 @@ export class LocationListComponent implements OnInit {
       next: () => {
         this.locations = this.locations.filter(l => l.id !== location.id);
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.isLoading = false;
         this.errorMessage = error.message;
+        this.cdr.markForCheck();
       }
     });
   }
