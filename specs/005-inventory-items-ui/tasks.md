@@ -18,10 +18,10 @@
 
 **Purpose**: Project initialization and basic Angular structure
 
-- [ ] T001 Create inventory-items feature directory structure at `frontend/src/app/inventory-items/`
-- [ ] T002 Create models, components, pages, and services subdirectories
-- [ ] T003 [P] Initialize Angular app configuration in `frontend/src/app/app.config.ts` (if needed)
-- [ ] T004 [P] Setup routing configuration in `frontend/src/app/app.routes.ts` with inventory-items routes
+- [x] T001 Create inventory-items feature directory structure at `frontend/src/app/inventory-items/`
+- [x] T002 Create models, components, pages, and services subdirectories
+- [x] T003 [P] Initialize Angular app configuration in `frontend/src/app/app.config.ts` (if needed)
+- [x] T004 [P] Setup routing configuration in `frontend/src/app/app.routes.ts` with inventory-items routes
 
 ---
 
@@ -31,16 +31,16 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [P] Create InventoryItem model interface in `frontend/src/app/inventory-items/models/inventory-item.model.ts`
-- [ ] T006 [P] Create form DTOs (CreateItemFormModel, EditItemFormModel) in `frontend/src/app/inventory-items/models/inventory-item.model.ts`
-- [ ] T007 Extend ApiService with `/v1/inventory-items` endpoint methods in `frontend/src/app/core/http/api.service.ts`
-- [ ] T008 Create InventoryItemsService with RxJS state management in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
-- [ ] T009 Create PatchDTO (includes error handling) in service
-- [ ] T010 [P] Create LoadingSpinner presentational component in `frontend/src/app/inventory-items/components/loading-spinner/` (if not reused from existing)
-- [ ] T011 [P] Create ErrorMessage presentational component in `frontend/src/app/inventory-items/components/error-message/`
-- [ ] T012 [P] Create Pagination component in `frontend/src/app/inventory-items/components/pagination/`
-- [ ] T013 Create DateFormatter utility pipe in `frontend/src/app/inventory-items/components/` (or utilities/)
-- [ ] T014 Setup HTTP error interceptor in `frontend/src/app/core/interceptors/` (extend existing auth interceptor if needed)
+- [x] T005 [P] Create InventoryItem model interface in `frontend/src/app/inventory-items/models/inventory-item.model.ts`
+- [x] T006 [P] Create form DTOs (CreateItemFormModel, EditItemFormModel) in `frontend/src/app/inventory-items/models/inventory-item.model.ts`
+- [x] T007 Extend ApiService with `/v1/inventory-items` endpoint methods in `frontend/src/app/core/http/api.service.ts`
+- [x] T008 Create InventoryItemsService with RxJS state management in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
+- [x] T009 Create PatchDTO (includes error handling) in service
+- [x] T010 [P] Create LoadingSpinner presentational component in `frontend/src/app/inventory-items/components/loading-spinner/` (if not reused from existing)
+- [x] T011 [P] Create ErrorMessage presentational component in `frontend/src/app/inventory-items/components/error-message/`
+- [x] T012 [P] Create Pagination component in `frontend/src/app/inventory-items/components/pagination/`
+- [x] T013 Create DateFormatter utility pipe in `frontend/src/app/inventory-items/components/` (or utilities/)
+- [x] T014 Setup HTTP error interceptor in `frontend/src/app/core/interceptors/` (extend existing auth interceptor if needed)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -54,73 +54,73 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create ItemFormComponent in `frontend/src/app/inventory-items/components/item-form/item-form.component.ts`
+- [x] T015 [P] [US1] Create ItemFormComponent in `frontend/src/app/inventory-items/components/item-form/item-form.component.ts`
   - Reactive forms with form validation (required fields, max lengths, min values)
   - Support both create (with initialQuantity) and edit (without initialQuantity) modes
   - Display validation errors inline (name, quantity, threshold, SKU)
   - Disable currentQuantity field (read-only)
   - Emit save/cancel events
 
-- [ ] T016 [P] [US1] Create ItemFormComponent template in `frontend/src/app/inventory-items/components/item-form/item-form.component.html`
+- [x] T016 [P] [US1] Create ItemFormComponent template in `frontend/src/app/inventory-items/components/item-form/item-form.component.html`
   - Form fields: name (required), description, SKU, category (dropdown), location (dropdown), unit, lowStockThreshold, initialQuantity
   - Validation error messages below each field
   - Create and Cancel buttons
   - Loading state while submitting
 
-- [ ] T017 [P] [US1] Create ItemFormComponent spec tests in `frontend/src/app/inventory-items/components/item-form/item-form.component.spec.ts`
+- [x] T017 [P] [US1] Create ItemFormComponent spec tests in `frontend/src/app/inventory-items/components/item-form/item-form.component.spec.ts`
   - Test form validation (required name, invalid quantities)
   - Test form submission emits save event
   - Test form cancel emits cancel event
   - Test read-only currentQuantity field
 
-- [ ] T018 [P] [US1] Create ItemListComponent for displaying items in table in `frontend/src/app/inventory-items/components/item-list/item-list.component.ts`
+- [x] T018 [P] [US1] Create ItemListComponent for displaying items in table in `frontend/src/app/inventory-items/components/item-list/item-list.component.ts`
   - Input: items array, pagination info, loading state
   - Output: page, edit, archive, delete, restore events
   - Display columns: name, SKU, category, location, quantity, unit, threshold, status, createdDate
   - Show visual distinction for archived items
 
-- [ ] T019 [P] [US1] Create ItemListComponent template in `frontend/src/app/inventory-items/components/item-list/item-list.component.html`
+- [x] T019 [P] [US1] Create ItemListComponent template in `frontend/src/app/inventory-items/components/item-list/item-list.component.html`
   - Table with columns for all item fields
   - Action buttons: Edit, Archive/Restore, Delete
   - Status badge (ACTIVE green, ARCHIVED gray)
   - Format dates with DatePipe('medium')
 
-- [ ] T020 [US1] Create InventoryItemsPageComponent (smart/container) in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.ts`
+- [x] T020 [US1] Create InventoryItemsPageComponent (smart/container) in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.ts`
   - Subscribe to InventoryItemsService observables (items$, loading$, error$, filters$)
   - Implement form modal/page for create (emit from ItemFormComponent → call service.createItem)
   - Handle form submission → call API → refresh list
   - Dispatch list refresh on component init
 
-- [ ] T021 [US1] Create InventoryItemsPageComponent template in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.html`
+- [x] T021 [US1] Create InventoryItemsPageComponent template in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.html`
   - Display LoadingSpinner while loading
   - Display ErrorMessage if error with retry
   - "Create New Item" button
   - ItemListComponent (presentational)
   - Modal or page for item-form component
 
-- [ ] T022 [US1] Implement service method `createItem()` in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
+- [x] T022 [US1] Implement service method `createItem()` in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
   - Call POST /v1/inventory-items with CreateItemRequest
   - Handle response (InventoryItemResponseDTO)
   - Update items$ BehaviorSubject
   - Return Observable<InventoryItem>
 
-- [ ] T023 [US1] Implement service method `listItems()` in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
+- [x] T023 [US1] Implement service method `listItems()` in `frontend/src/app/inventory-items/services/inventory-items.service.ts`
   - Call GET /v1/inventory-items with page, size, status, categoryId params
   - Update items$ and pagination state
   - Handle loading state
 
-- [ ] T024 [US1] Create spec tests for InventoryItemsPageComponent in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.spec.ts`
+- [x] T024 [US1] Create spec tests for InventoryItemsPageComponent in `frontend/src/app/inventory-items/pages/inventory-items-page/inventory-items-page.component.spec.ts`
   - Test list loads on init
   - Test create form opens/closes
   - Test form submission calls service.createItem()
   - Test item appears in list after create
 
-- [ ] T025 [P] [US1] Create spec tests for InventoryItemsService in `frontend/src/app/inventory-items/services/inventory-items.service.spec.ts`
+- [x] T025 [P] [US1] Create spec tests for InventoryItemsService in `frontend/src/app/inventory-items/services/inventory-items.service.spec.ts`
   - Test createItem() makes POST request
   - Test listItems() makes GET request with params
   - Test observables emit updated state
 
-- [ ] T026 [US1] Integrate category and location dropdowns in ItemFormComponent
+- [x] T026 [US1] Integrate category and location dropdowns in ItemFormComponent
   - Call service.getCategories() and service.getLocations()
   - Populate dropdowns from observables
   - Display category/location names, not IDs
@@ -137,55 +137,55 @@
 
 ### Implementation for User Story 2
 
-- [ ] T027 [P] [US2] Create ItemDetailComponent in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.ts`
+- [x] T027 [P] [US2] Create ItemDetailComponent in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.ts`
   - Input: item (InventoryItem)
   - Output: edit, archive, delete events
   - Display all item fields (name, description, SKU, category, location, quantity, unit, threshold, status, createdDate, updatedDate)
   - Format dates human-readable
 
-- [ ] T028 [P] [US2] Create ItemDetailComponent template in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.html`
+- [x] T028 [P] [US2] Create ItemDetailComponent template in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.html`
   - Display all fields as read-only text
   - Current quantity styled/highlighted if below threshold
   - Status badge (colored based on status)
   - Edit, Archive, Delete buttons
 
-- [ ] T029 [US2] Create ItemDetailPageComponent (container) in `frontend/src/app/inventory-items/pages/item-detail-page/item-detail-page.component.ts`
+- [x] T029 [US2] Create ItemDetailPageComponent (container) in `frontend/src/app/inventory-items/pages/item-detail-page/item-detail-page.component.ts`
   - Route param: item ID
   - Load item via service.getItem(id)
   - Show ItemDetailComponent + edit form
   - Handle edit → open form with pre-populated data
 
-- [ ] T030 [US2] Implement service method `getItem(id)` in service
+- [x] T030 [US2] Implement service method `getItem(id)` in service
   - Call GET /v1/inventory-items/{id}
   - Return Observable<InventoryItem>
 
-- [ ] T031 [US2] Implement service method `updateItem(id, data)` in service
+- [x] T031 [US2] Implement service method `updateItem(id, data)` in service
   - Call PATCH /v1/inventory-items/{id} with EditItemRequest (no currentQuantity)
   - Update items$ state
   - Return Observable<InventoryItem>
 
-- [ ] T032 [US2] Update ItemFormComponent to support edit mode
+- [x] T032 [US2] Update ItemFormComponent to support edit mode
   - Accept item as @Input for pre-population
   - Disable currentQuantity field (not in edit form or read-only)
   - Emit different event type for edit vs create (or same event with mode flag)
 
-- [ ] T033 [US2] Implement edit flow in ItemDetailPageComponent
+- [x] T033 [US2] Implement edit flow in ItemDetailPageComponent
   - Click Edit → show form with item data pre-populated
   - Form submit → call service.updateItem(id, formValue)
   - Success → close form, refresh item detail
 
-- [ ] T034 [P] [US2] Create spec tests for ItemDetailComponent in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.spec.ts`
+- [x] T034 [P] [US2] Create spec tests for ItemDetailComponent in `frontend/src/app/inventory-items/components/item-detail/item-detail.component.spec.ts`
   - Test all fields display correctly
   - Test read-only rendering
   - Test buttons emit events
 
-- [ ] T035 [US2] Create spec tests for ItemDetailPageComponent in `frontend/src/app/inventory-items/pages/item-detail-page/item-detail-page.component.spec.ts`
+- [x] T035 [US2] Create spec tests for ItemDetailPageComponent in `frontend/src/app/inventory-items/pages/item-detail-page/item-detail-page.component.spec.ts`
   - Test item loads from service on init
   - Test edit form opens with pre-populated data
   - Test form submission calls service.updateItem()
   - Test currentQuantity field is not editable
 
-- [ ] T036 [US2] Verify SKU uniqueness error handling
+- [x] T036 [US2] Verify SKU uniqueness error handling
   - Service receives 400 SKU_DUPLICATE error from API
   - Display error message in form: "SKU already exists for this user"
   - User can retry with different SKU

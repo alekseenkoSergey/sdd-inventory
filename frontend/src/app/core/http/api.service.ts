@@ -21,6 +21,10 @@ export class ApiService {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, { withCredentials: true });
   }
 
+  patch<T>(endpoint: string, body: any): any {
+    return this.http.patch<T>(`${this.baseUrl}${endpoint}`, body, { withCredentials: true });
+  }
+
   delete<T>(endpoint: string): any {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`, { withCredentials: true });
   }

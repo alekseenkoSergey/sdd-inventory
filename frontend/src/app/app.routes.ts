@@ -5,6 +5,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { CategoriesPageComponent } from './categories/pages/categories-page.component';
 import { LocationsPageComponent } from './features/locations/locations-page/locations-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { InventoryItemsPageComponent } from './inventory-items/pages/inventory-items-page/inventory-items-page.component';
+import { ItemDetailPageComponent } from './inventory-items/pages/item-detail-page/item-detail-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +14,8 @@ export const routes: Routes = [
   { path: 'home', canActivate: [AuthGuard], component: HomeComponent },
   { path: 'categories', canActivate: [AuthGuard], component: CategoriesPageComponent },
   { path: 'locations', canActivate: [AuthGuard], component: LocationsPageComponent },
+  { path: 'inventory/items', canActivate: [AuthGuard], component: InventoryItemsPageComponent },
+  { path: 'inventory/items/:id', canActivate: [AuthGuard], component: ItemDetailPageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
 ];
