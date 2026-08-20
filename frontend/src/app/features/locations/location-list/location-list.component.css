@@ -6,15 +6,9 @@
 
 .location-list-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 20px;
-}
-
-.location-list-header h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
 }
 
 .loading {
