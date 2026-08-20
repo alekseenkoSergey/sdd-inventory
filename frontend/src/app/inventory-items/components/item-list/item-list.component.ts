@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InventoryItem } from '../../models/inventory-item.model';
+import { InventoryItem, Category, Location } from '../../models/inventory-item.model';
 
 @Component({
   selector: 'app-item-list',
@@ -26,8 +26,8 @@ import { InventoryItem } from '../../models/inventory-item.model';
         <tr *ngFor="let item of items" [class.archived]="item.status === 'ARCHIVED'">
           <td>{{ item.name }}</td>
           <td>{{ item.sku || '-' }}</td>
-          <td>{{ item.categoryId }}</td>
-          <td>{{ item.locationId }}</td>
+          <td>{{ getCategoryName(item.categoryId) }}</td>
+          <td>{{ getLocationName(item.locationId) }}</td>
           <td class="quantity" [class.low]="item.currentQuantity < item.lowStockThreshold">
             {{ item.currentQuantity }}
           </td>
@@ -208,6 +208,8 @@ import { InventoryItem } from '../../models/inventory-item.model';
 })
 export class ItemListComponent {
   @Input() items: InventoryItem[] | null = null;
+  @Input() categories: Category[] = [];
+  @Input() locations: Location[] = [];
   @Output() edit = new EventEmitter<InventoryItem>();
   @Output() archiveRestore = new EventEmitter<InventoryItem>();
   @Output() delete = new EventEmitter<InventoryItem>();
@@ -215,6 +217,14 @@ export class ItemListComponent {
   @Output() stockOut = new EventEmitter<InventoryItem>();
   @Output() adjustment = new EventEmitter<InventoryItem>();
   @Output() history = new EventEmitter<InventoryItem>();
+
+  getCategoryName(categoryId: number): string {
+    return this.categories.find(c => c.id === categoryId)?.name || `Category ${categoryId}`;
+  }
+
+  getLocationName(locationId: number): string {
+    return this.locations.find(l => l.id === locationId)?.name || `Location ${locationId}`;
+  }
 
   onEdit(item: InventoryItem): void {
     this.edit.emit(item);

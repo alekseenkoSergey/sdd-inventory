@@ -66,6 +66,8 @@ export class CurrentPageExtractPipe implements PipeTransform {
       <div *ngIf="!(loading$ | async) && (items$ | async) as items">
         <app-item-list
           [items]="items"
+          [categories]="(categories$ | async) ?? []"
+          [locations]="(locations$ | async) ?? []"
           (edit)="showEditForm($event)"
           (archiveRestore)="onArchiveRestore($event)"
           (delete)="onDelete($event)"
