@@ -8,6 +8,10 @@ import { ErrorMessageComponent } from '../../components/error-message/error-mess
 import { ItemListComponent } from '../../components/item-list/item-list.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ItemFormComponent } from '../../components/item-form/item-form.component';
+import { StockInFormComponent } from '../../../stock-movements/movement-form/stock-in-form.component';
+import { StockOutFormComponent } from '../../../stock-movements/movement-form/stock-out-form.component';
+import { AdjustmentFormComponent } from '../../../stock-movements/movement-form/adjustment-form.component';
+import { MovementHistoryModalComponent } from '../../../stock-movements/movement-history-modal/movement-history-modal.component';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -30,6 +34,10 @@ export class CurrentPageExtractPipe implements PipeTransform {
     ItemListComponent,
     PaginationComponent,
     ItemFormComponent,
+    StockInFormComponent,
+    StockOutFormComponent,
+    AdjustmentFormComponent,
+    MovementHistoryModalComponent,
     CurrentPageExtractPipe
   ],
   template: `
@@ -61,6 +69,10 @@ export class CurrentPageExtractPipe implements PipeTransform {
           (edit)="showEditForm($event)"
           (archiveRestore)="onArchiveRestore($event)"
           (delete)="onDelete($event)"
+          (stockIn)="showStockInForm($event)"
+          (stockOut)="showStockOutForm($event)"
+          (adjustment)="showAdjustmentForm($event)"
+          (history)="showHistoryModal($event)"
         ></app-item-list>
 
         <app-pagination
@@ -71,8 +83,8 @@ export class CurrentPageExtractPipe implements PipeTransform {
       </div>
 
       <!-- Modal for create/edit form -->
-      <div *ngIf="showForm" class="modal-overlay">
-        <div class="modal-content">
+      <div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h2>{{ editingItem ? 'Edit Item' : 'Create New Item' }}</h2>
             <button (click)="closeForm()" class="close-button">&times;</button>
@@ -86,6 +98,75 @@ export class CurrentPageExtractPipe implements PipeTransform {
               (save)="onSave($event)"
               (cancel)="closeForm()"
             ></app-item-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for stock in form -->
+      <div *ngIf="showStockInModal && selectedItem" class="modal-overlay" (click)="closeStockInForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Stock In</h2>
+            <button (click)="closeStockInForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-stock-in-form
+              [itemId]="selectedItem.id"
+              (close)="closeStockInForm()"
+              (submit)="onStockInSubmit()"
+            ></app-stock-in-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for stock out form -->
+      <div *ngIf="showStockOutModal && selectedItem" class="modal-overlay" (click)="closeStockOutForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Stock Out</h2>
+            <button (click)="closeStockOutForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-stock-out-form
+              [itemId]="selectedItem.id"
+              [currentQuantity]="selectedItem.currentQuantity"
+              (close)="closeStockOutForm()"
+              (submit)="onStockOutSubmit()"
+            ></app-stock-out-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for adjustment form -->
+      <div *ngIf="showAdjustmentModal && selectedItem" class="modal-overlay" (click)="closeAdjustmentForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Record Adjustment</h2>
+            <button (click)="closeAdjustmentForm()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-adjustment-form
+              [itemId]="selectedItem.id"
+              [currentQuantity]="selectedItem.currentQuantity"
+              (close)="closeAdjustmentForm()"
+              (submit)="onAdjustmentSubmit()"
+            ></app-adjustment-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for movement history -->
+      <div *ngIf="showMovementHistoryModal && selectedItem" class="modal-overlay" (click)="closeHistoryModal()">
+        <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Stock Movements</h2>
+            <button (click)="closeHistoryModal()" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <app-movement-history-modal
+              [itemId]="selectedItem.id"
+              (close)="closeHistoryModal()"
+            ></app-movement-history-modal>
           </div>
         </div>
       </div>
@@ -223,11 +304,20 @@ export class CurrentPageExtractPipe implements PipeTransform {
     .modal-body {
       padding: 1.5rem;
     }
+
+    .modal-large {
+      max-width: 900px;
+    }
   `]
 })
 export class InventoryItemsPageComponent implements OnInit {
   showForm = false;
   editingItem: InventoryItem | undefined;
+  showStockInModal = false;
+  showStockOutModal = false;
+  showAdjustmentModal = false;
+  showMovementHistoryModal = false;
+  selectedItem: InventoryItem | undefined;
 
   constructor(
     private service: InventoryItemsService,
@@ -295,6 +385,61 @@ export class InventoryItemsPageComponent implements OnInit {
 
   onRetry(): void {
     this.service.listItems().subscribe();
+  }
+
+  showStockInForm(item: InventoryItem): void {
+    this.selectedItem = item;
+    this.showStockInModal = true;
+  }
+
+  closeStockInForm(): void {
+    this.showStockInModal = false;
+    this.selectedItem = undefined;
+  }
+
+  onStockInSubmit(): void {
+    this.closeStockInForm();
+    this.service.listItems().subscribe();
+  }
+
+  showStockOutForm(item: InventoryItem): void {
+    this.selectedItem = item;
+    this.showStockOutModal = true;
+  }
+
+  closeStockOutForm(): void {
+    this.showStockOutModal = false;
+    this.selectedItem = undefined;
+  }
+
+  onStockOutSubmit(): void {
+    this.closeStockOutForm();
+    this.service.listItems().subscribe();
+  }
+
+  showAdjustmentForm(item: InventoryItem): void {
+    this.selectedItem = item;
+    this.showAdjustmentModal = true;
+  }
+
+  closeAdjustmentForm(): void {
+    this.showAdjustmentModal = false;
+    this.selectedItem = undefined;
+  }
+
+  onAdjustmentSubmit(): void {
+    this.closeAdjustmentForm();
+    this.service.listItems().subscribe();
+  }
+
+  showHistoryModal(item: InventoryItem): void {
+    this.selectedItem = item;
+    this.showMovementHistoryModal = true;
+  }
+
+  closeHistoryModal(): void {
+    this.showMovementHistoryModal = false;
+    this.selectedItem = undefined;
   }
 
   goBack(): void {

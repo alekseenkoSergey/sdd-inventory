@@ -41,6 +41,10 @@ import { InventoryItem } from '../../models/inventory-item.model';
           <td>{{ item.createdDate | date: 'medium' }}</td>
           <td class="actions">
             <button (click)="onEdit(item)" class="btn-small btn-edit">Edit</button>
+            <button (click)="onStockIn(item)" class="btn-small btn-stock-in" title="Record Stock In">+</button>
+            <button (click)="onStockOut(item)" class="btn-small btn-stock-out" title="Record Stock Out">−</button>
+            <button (click)="onAdjustment(item)" class="btn-small btn-adjustment" title="Record Adjustment">≈</button>
+            <button (click)="onHistory(item)" class="btn-small btn-history" title="View Stock Movements">⟳</button>
             <button
               (click)="onArchiveRestore(item)"
               [class]="'btn-small btn-' + (item.status === 'ARCHIVED' ? 'restore' : 'archive')"
@@ -160,6 +164,38 @@ import { InventoryItem } from '../../models/inventory-item.model';
       background-color: #c0392b;
     }
 
+    .btn-stock-in {
+      background-color: #27ae60;
+    }
+
+    .btn-stock-in:hover {
+      background-color: #229954;
+    }
+
+    .btn-stock-out {
+      background-color: #e74c3c;
+    }
+
+    .btn-stock-out:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-adjustment {
+      background-color: #3498db;
+    }
+
+    .btn-adjustment:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-history {
+      background-color: #9b59b6;
+    }
+
+    .btn-history:hover {
+      background-color: #8e44ad;
+    }
+
     .empty-state {
       padding: 3rem 1rem;
       text-align: center;
@@ -175,6 +211,10 @@ export class ItemListComponent {
   @Output() edit = new EventEmitter<InventoryItem>();
   @Output() archiveRestore = new EventEmitter<InventoryItem>();
   @Output() delete = new EventEmitter<InventoryItem>();
+  @Output() stockIn = new EventEmitter<InventoryItem>();
+  @Output() stockOut = new EventEmitter<InventoryItem>();
+  @Output() adjustment = new EventEmitter<InventoryItem>();
+  @Output() history = new EventEmitter<InventoryItem>();
 
   onEdit(item: InventoryItem): void {
     this.edit.emit(item);
@@ -186,5 +226,21 @@ export class ItemListComponent {
 
   onDelete(item: InventoryItem): void {
     this.delete.emit(item);
+  }
+
+  onStockIn(item: InventoryItem): void {
+    this.stockIn.emit(item);
+  }
+
+  onStockOut(item: InventoryItem): void {
+    this.stockOut.emit(item);
+  }
+
+  onAdjustment(item: InventoryItem): void {
+    this.adjustment.emit(item);
+  }
+
+  onHistory(item: InventoryItem): void {
+    this.history.emit(item);
   }
 }
