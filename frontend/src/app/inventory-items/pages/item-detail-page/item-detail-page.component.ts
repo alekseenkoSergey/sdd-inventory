@@ -51,7 +51,7 @@ import { NotificationService } from '../../../services/notification.service';
             <button (click)="showStockInForm()" class="btn btn-secondary">Record Stock In</button>
             <button (click)="showStockOutForm()" class="btn btn-secondary">Record Stock Out</button>
             <button (click)="showAdjustmentForm()" class="btn btn-secondary">Record Adjustment</button>
-            <button (click)="showHistoryModal()" class="btn btn-info">View History</button>
+            <button (click)="showHistoryModal()" class="btn btn-info">Stock Movements</button>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ import { NotificationService } from '../../../services/notification.service';
       <div *ngIf="showMovementHistoryModal && item" class="modal-overlay" (click)="closeHistoryModal()">
         <div class="modal-content modal-large" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h2>Movement History</h2>
+            <h2>Stock Movements</h2>
             <button (click)="closeHistoryModal()" class="close-button">&times;</button>
           </div>
           <div class="modal-body">

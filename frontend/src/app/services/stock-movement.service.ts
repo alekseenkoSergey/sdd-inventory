@@ -12,7 +12,7 @@ import {
   providedIn: 'root'
 })
 export class StockMovementService {
-  private apiUrl = 'http://localhost:8080/api/v1/stock-movements';
+  private apiBaseUrl = 'http://localhost:8080/api/v1';
   private httpOptions = {
     withCredentials: true
   };
@@ -30,7 +30,7 @@ export class StockMovementService {
     this.errorSubject.next(null);
 
     return this.http.post<StockMovement>(
-      `${this.apiUrl}/items/${itemId}`,
+      `${this.apiBaseUrl}/items/${itemId}/movements`,
       request,
       this.httpOptions
     ).pipe(
@@ -50,7 +50,7 @@ export class StockMovementService {
     itemId: number,
     startDate?: string,
     endDate?: string
-  ): Observable<MovementHistoryResponse> {
+  ): Observable<StockMovement[]> {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
@@ -58,11 +58,11 @@ export class StockMovementService {
     if (startDate) params['startDate'] = startDate;
     if (endDate) params['endDate'] = endDate;
 
-    return this.http.get<MovementHistoryResponse>(
-      `${this.apiUrl}/items/${itemId}/history`,
+    return this.http.get<StockMovement[]>(
+      `${this.apiBaseUrl}/items/${itemId}/movements`,
       { params, withCredentials: true }
     ).pipe(
-      tap(response => {
+      tap(movements => {
         this.loadingSubject.next(false);
       }),
       catchError(error => {

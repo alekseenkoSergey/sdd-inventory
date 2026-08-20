@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockMovementService } from '../../services/stock-movement.service';
 import { DisplayModelService, DisplayMovement } from '../shared/display-model.service';
@@ -9,10 +9,10 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-movement-history-modal',
   standalone: true,
-  imports: [CommonModule, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="movement-history-modal">
-      <h2>Movement History</h2>
+      <h2>Stock Movements</h2>
 
       <div class="filters">
         <form [formGroup]="filterForm" (ngSubmit)="onApplyFilter()">
@@ -354,8 +354,8 @@ export class MovementHistoryModalComponent implements OnInit, OnDestroy {
     this.stockMovementService.getMovementHistory(this.itemId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          const displayMovements = this.displayModelService.transformMovementsForDisplay(response.movements);
+        next: (movements) => {
+          const displayMovements = this.displayModelService.transformMovementsForDisplay(movements);
           this.movements = displayMovements.sort((a, b) => {
             return new Date(a.movementDate).getTime() - new Date(b.movementDate).getTime();
           });
@@ -376,8 +376,8 @@ export class MovementHistoryModalComponent implements OnInit, OnDestroy {
     this.stockMovementService.getMovementHistory(this.itemId, startDate, endDate)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          const displayMovements = this.displayModelService.transformMovementsForDisplay(response.movements);
+        next: (movements) => {
+          const displayMovements = this.displayModelService.transformMovementsForDisplay(movements);
           this.movements = displayMovements.sort((a, b) => {
             return new Date(a.movementDate).getTime() - new Date(b.movementDate).getTime();
           });
