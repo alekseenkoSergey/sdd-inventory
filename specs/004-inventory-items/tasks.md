@@ -26,11 +26,11 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create InventoryItem entity class at `backend/src/main/java/org/example/sddinventory/entity/InventoryItem.java` with all 12 fields (id, userId, name, description, sku, categoryId, locationId, currentQuantity, unit, lowStockThreshold, status, timestamps)
-- [ ] T002 Create ItemStatus enum at `backend/src/main/java/org/example/sddinventory/entity/ItemStatus.java` with ACTIVE and ARCHIVED values
-- [ ] T003 [P] Create Flyway migration V5 at `backend/src/main/resources/db/migration/V5__Create_inventory_items_table.sql` with schema: BIGINT id (IDENTITY), Long userId, String name/sku, Long categoryId/locationId, Decimal currentQuantity/lowStockThreshold, VARCHAR status, timestamps, partial unique index on (user_id, sku) WHERE sku IS NOT NULL, FKs to category and location
-- [ ] T004 Create InventoryItemRepository interface at `backend/src/main/java/org/example/sddinventory/repository/InventoryItemRepository.java` extending Spring Data JPA with user-scoped methods: findByIdAndUserId(Long id, Long userId), findByUserIdAndStatus(Long userId, ItemStatus status), findByUserId(Long userId, Pageable), deleteByIdAndUserId(Long id, Long userId)
-- [ ] T005 [P] Update exception handler at `backend/src/main/java/org/example/sddinventory/config/GlobalExceptionHandler.java` to map new exceptions: SKU_DUPLICATE, CATEGORY_NOT_FOUND, LOCATION_NOT_FOUND, ITEM_NOT_FOUND for inventory items
+- [x] T001 Create InventoryItem entity class at `backend/src/main/java/org/example/sddinventory/entity/InventoryItem.java` with all 12 fields (id, userId, name, description, sku, categoryId, locationId, currentQuantity, unit, lowStockThreshold, status, timestamps)
+- [x] T002 Create ItemStatus enum at `backend/src/main/java/org/example/sddinventory/entity/ItemStatus.java` with ACTIVE and ARCHIVED values
+- [x] T003 [P] Create Flyway migration V5 at `backend/src/main/resources/db/migration/V5__Create_inventory_items_table.sql` with schema: BIGINT id (IDENTITY), Long userId, String name/sku, Long categoryId/locationId, Decimal currentQuantity/lowStockThreshold, VARCHAR status, timestamps, partial unique index on (user_id, sku) WHERE sku IS NOT NULL, FKs to category and location
+- [x] T004 Create InventoryItemRepository interface at `backend/src/main/java/org/example/sddinventory/repository/InventoryItemRepository.java` extending Spring Data JPA with user-scoped methods: findByIdAndUserId(Long id, Long userId), findByUserIdAndStatus(Long userId, ItemStatus status), findByUserId(Long userId, Pageable), deleteByIdAndUserId(Long id, Long userId)
+- [x] T005 [P] Update exception handler at `backend/src/main/java/org/example/sddinventory/config/GlobalExceptionHandler.java` to map new exceptions: SKU_DUPLICATE, CATEGORY_NOT_FOUND, LOCATION_NOT_FOUND, ITEM_NOT_FOUND for inventory items
 
 ---
 
@@ -40,15 +40,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create InventoryItemService interface at `backend/src/main/java/org/example/sddinventory/service/InventoryItemService.java` with method signatures: createItem(Long userId, InventoryItemRequestDTO), getItem(Long userId, Long itemId), listItems(Long userId, int page, int size, ItemStatus status), updateItem(Long userId, Long itemId, InventoryItemPatchDTO), archiveItem(Long userId, Long itemId), restoreItem(Long userId, Long itemId), deleteItem(Long userId, Long itemId)
-- [ ] T007 Create InventoryItemService implementation at `backend/src/main/java/org/example/sddinventory/service/InventoryItemServiceImpl.java` with user isolation enforcement in all methods: extract userId from SecurityContext, filter all queries by userId, validate categoryId/locationId belong to same user
-- [ ] T008 [P] Create InventoryItemRequestDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemRequestDTO.java` with fields: name (@NotEmpty), description, sku, categoryId (@NotNull), locationId (@NotNull), unit (@NotNull), lowStockThreshold (@PositiveOrZero), initialQuantity (@PositiveOrZero)
-- [ ] T009 [P] Create InventoryItemResponseDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemResponseDTO.java` with all entity fields: id, name, description, sku, categoryId, locationId, currentQuantity, unit, lowStockThreshold, status, createdDate, updatedDate
-- [ ] T010 [P] Create InventoryItemPatchDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemPatchDTO.java` with optional fields: name, description, sku, categoryId, locationId, unit, lowStockThreshold—EXCLUDES currentQuantity field (read-only)
-- [ ] T011 Implement user data isolation in InventoryItemRepository—verify all query methods filter by userId before returning results; add @Query methods for findByIdAndUserId, findByUserIdAndStatus, deleteByIdAndUserId
-- [ ] T012 Implement user ownership validation in InventoryItemService—before create/update: validate categoryId exists and belongs to currentUserId using CategoryRepository.findByIdAndUserId(), validate locationId exists and belongs to currentUserId using LocationRepository.findByIdAndUserId(), throw CATEGORY_NOT_FOUND or LOCATION_NOT_FOUND if validation fails
-- [ ] T013 Add JPA timestamp annotations to InventoryItem entity: @CreationTimestamp on createdDate, @UpdateTimestamp on updatedDate for automatic server-side timestamp management
-- [ ] T014 Create base InventoryItemController at `backend/src/main/java/org/example/sddinventory/controller/InventoryItemController.java` with route prefix /api/v1/inventory-items and dependency injection for InventoryItemService and SecurityContext
+- [x] T006 Create InventoryItemService interface at `backend/src/main/java/org/example/sddinventory/service/InventoryItemService.java` with method signatures: createItem(Long userId, InventoryItemRequestDTO), getItem(Long userId, Long itemId), listItems(Long userId, int page, int size, ItemStatus status), updateItem(Long userId, Long itemId, InventoryItemPatchDTO), archiveItem(Long userId, Long itemId), restoreItem(Long userId, Long itemId), deleteItem(Long userId, Long itemId)
+- [x] T007 Create InventoryItemService implementation at `backend/src/main/java/org/example/sddinventory/service/InventoryItemServiceImpl.java` with user isolation enforcement in all methods: extract userId from SecurityContext, filter all queries by userId, validate categoryId/locationId belong to same user
+- [x] T008 [P] Create InventoryItemRequestDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemRequestDTO.java` with fields: name (@NotEmpty), description, sku, categoryId (@NotNull), locationId (@NotNull), unit (@NotNull), lowStockThreshold (@PositiveOrZero), initialQuantity (@PositiveOrZero)
+- [x] T009 [P] Create InventoryItemResponseDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemResponseDTO.java` with all entity fields: id, name, description, sku, categoryId, locationId, currentQuantity, unit, lowStockThreshold, status, createdDate, updatedDate
+- [x] T010 [P] Create InventoryItemPatchDTO at `backend/src/main/java/org/example/sddinventory/model/InventoryItemPatchDTO.java` with optional fields: name, description, sku, categoryId, locationId, unit, lowStockThreshold—EXCLUDES currentQuantity field (read-only)
+- [x] T011 Implement user data isolation in InventoryItemRepository—verify all query methods filter by userId before returning results; add @Query methods for findByIdAndUserId, findByUserIdAndStatus, deleteByIdAndUserId
+- [x] T012 Implement user ownership validation in InventoryItemService—before create/update: validate categoryId exists and belongs to currentUserId using CategoryRepository.findByIdAndUserId(), validate locationId exists and belongs to currentUserId using LocationRepository.findByIdAndUserId(), throw CATEGORY_NOT_FOUND or LOCATION_NOT_FOUND if validation fails
+- [x] T013 Add JPA timestamp annotations to InventoryItem entity: @CreationTimestamp on createdDate, @UpdateTimestamp on updatedDate for automatic server-side timestamp management
+- [x] T014 Create base InventoryItemController at `backend/src/main/java/org/example/sddinventory/controller/InventoryItemController.java` with route prefix /api/v1/inventory-items and dependency injection for InventoryItemService and SecurityContext
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -62,28 +62,28 @@
 
 ### Tests for User Story 1
 
-- [ ] T015 [P] [US1] Write unit test for InventoryItemService.createItem() in `backend/src/test/java/org/example/sddinventory/service/InventoryItemServiceTest.java`—test createItem with initialQuantity > 0 creates item and calls StockMovementService.createOpeningBalance()
-- [ ] T016 [P] [US1] Write unit test for InventoryItemService.createItem() with initialQuantity = 0 or null creates item without calling StockMovementService
+- [x] T015 [P] [US1] Write unit test for InventoryItemService.createItem() in `backend/src/test/java/org/example/sddinventory/service/InventoryItemServiceTest.java`—test createItem with initialQuantity > 0 creates item and calls StockMovementService.createOpeningBalance()
+- [x] T016 [P] [US1] Write unit test for InventoryItemService.createItem() with initialQuantity = 0 or null creates item without calling StockMovementService
 - [ ] T017 [P] [US1] Write integration test for POST /api/v1/inventory-items endpoint in `backend/src/test/java/org/example/sddinventory/controller/InventoryItemControllerTest.java`—verify HTTP 201 Created response
 - [ ] T018 [P] [US1] Write contract test validating API response matches InventoryItemResponseDTO schema in `backend/src/test/java/org/example/sddinventory/contract/InventoryItemApiContractTest.java`
-- [ ] T019 [US1] Test validation: empty name in request rejected with 400 Bad Request and error message
-- [ ] T020 [US1] Test validation: negative initialQuantity in request rejected with 400 Bad Request
-- [ ] T021 [US1] Test validation: categoryId not found returns 404 CATEGORY_NOT_FOUND
-- [ ] T022 [US1] Test validation: locationId not found returns 404 LOCATION_NOT_FOUND
-- [ ] T023 [US1] Test validation: categoryId belongs to different user returns 404 CATEGORY_NOT_FOUND (user isolation)
-- [ ] T024 [US1] Test validation: locationId belongs to different user returns 404 LOCATION_NOT_FOUND (user isolation)
-- [ ] T025 [US1] Test user data isolation: item created by User1 cannot be retrieved by User2
+- [x] T019 [US1] Test validation: empty name in request rejected with 400 Bad Request and error message
+- [x] T020 [US1] Test validation: negative initialQuantity in request rejected with 400 Bad Request
+- [x] T021 [US1] Test validation: categoryId not found returns 404 CATEGORY_NOT_FOUND
+- [x] T022 [US1] Test validation: locationId not found returns 404 LOCATION_NOT_FOUND
+- [x] T023 [US1] Test validation: categoryId belongs to different user returns 404 CATEGORY_NOT_FOUND (user isolation)
+- [x] T024 [US1] Test validation: locationId belongs to different user returns 404 LOCATION_NOT_FOUND (user isolation)
+- [x] T025 [US1] Test user data isolation: item created by User1 cannot be retrieved by User2
 
 ### Implementation for User Story 1
 
-- [ ] T026 [US1] Implement InventoryItemService.createItem(Long userId, InventoryItemRequestDTO) method: extract userId from SecurityContext, validate DTO, check SKU uniqueness for (userId, sku), validate categoryId/locationId belong to user, create InventoryItem entity, persist to database, if initialQuantity > 0 call StockMovementService.createOpeningBalance() within @Transactional
-- [ ] T027 [US1] Implement InventoryItemRepository.findBySku(Long userId, String sku) for SKU uniqueness check; throw SKU_DUPLICATE exception if duplicate found
-- [ ] T028 [P] [US1] Implement POST /api/v1/inventory-items endpoint in InventoryItemController that accepts InventoryItemRequestDTO, calls service.createItem(), returns InventoryItemResponseDTO with HTTP 201 Created
-- [ ] T029 [P] [US1] Implement InventoryItemRepository.findByIdAndUserId(Long id, Long userId) for user-scoped retrieval before create
-- [ ] T030 [US1] Implement category ownership check in InventoryItemService.validateCategory(Long categoryId, Long userId)—query CategoryRepository.findByIdAndUserId(), throw CATEGORY_NOT_FOUND if null
-- [ ] T031 [US1] Implement location ownership check in InventoryItemService.validateLocation(Long locationId, Long userId)—query LocationRepository.findByIdAndUserId(), throw LOCATION_NOT_FOUND if null
-- [ ] T032 [US1] Add input validation to InventoryItemRequestDTO: @NotEmpty on name, @NotNull on categoryId/locationId/unit, @PositiveOrZero on quantities, @Size(max=255) on name, @Size(max=100) on sku
-- [ ] T033 [US1] Add exception mapping in GlobalExceptionHandler: map ValidationException to 400 with VALIDATION_ERROR code, map SKU_DUPLICATE to 400, map CATEGORY_NOT_FOUND to 404, map LOCATION_NOT_FOUND to 404
+- [x] T026 [US1] Implement InventoryItemService.createItem(Long userId, InventoryItemRequestDTO) method: extract userId from SecurityContext, validate DTO, check SKU uniqueness for (userId, sku), validate categoryId/locationId belong to user, create InventoryItem entity, persist to database, if initialQuantity > 0 call StockMovementService.createOpeningBalance() within @Transactional
+- [x] T027 [US1] Implement InventoryItemRepository.findBySku(Long userId, String sku) for SKU uniqueness check; throw SKU_DUPLICATE exception if duplicate found
+- [x] T028 [P] [US1] Implement POST /api/v1/inventory-items endpoint in InventoryItemController that accepts InventoryItemRequestDTO, calls service.createItem(), returns InventoryItemResponseDTO with HTTP 201 Created
+- [x] T029 [P] [US1] Implement InventoryItemRepository.findByIdAndUserId(Long id, Long userId) for user-scoped retrieval before create
+- [x] T030 [US1] Implement category ownership check in InventoryItemService.validateCategory(Long categoryId, Long userId)—query CategoryRepository.findByIdAndUserId(), throw CATEGORY_NOT_FOUND if null
+- [x] T031 [US1] Implement location ownership check in InventoryItemService.validateLocation(Long locationId, Long userId)—query LocationRepository.findByIdAndUserId(), throw LOCATION_NOT_FOUND if null
+- [x] T032 [US1] Add input validation to InventoryItemRequestDTO: @NotEmpty on name, @NotNull on categoryId/locationId/unit, @PositiveOrZero on quantities, @Size(max=255) on name, @Size(max=100) on sku
+- [x] T033 [US1] Add exception mapping in GlobalExceptionHandler: map ValidationException to 400 with VALIDATION_ERROR code, map SKU_DUPLICATE to 400, map CATEGORY_NOT_FOUND to 404, map LOCATION_NOT_FOUND to 404
 - [ ] T034 [US1] Test User Story 1 end-to-end using scenarios from quickstart.md (Scenario 1: create with quantity, Scenario 2: create without quantity)
 
 **Checkpoint**: User Story 1 complete and independently functional. MVP is ready for testing.

@@ -3,9 +3,11 @@ package org.example.sddinventory.config;
 import org.example.sddinventory.exception.CategoryHasItemsException;
 import org.example.sddinventory.exception.CategoryNameNotUniqueException;
 import org.example.sddinventory.exception.CategoryNotFoundException;
+import org.example.sddinventory.exception.InventoryItemNotFoundException;
 import org.example.sddinventory.exception.LocationHasItemsException;
 import org.example.sddinventory.exception.LocationNameNotUniqueException;
 import org.example.sddinventory.exception.LocationNotFoundException;
+import org.example.sddinventory.exception.SkuDuplicateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -139,6 +141,34 @@ public class GlobalExceptionHandler {
         body.put("path", request.getDescription(false).replace("uri=", ""));
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InventoryItemNotFoundException.class)
+    public ResponseEntity<?> handleInventoryItemNotFoundException(InventoryItemNotFoundException ex, WebRequest request) {
+        logger.warn("Inventory item not found: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "ITEM_NOT_FOUND");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SkuDuplicateException.class)
+    public ResponseEntity<?> handleSkuDuplicateException(SkuDuplicateException ex, WebRequest request) {
+        logger.warn("SKU duplicate: {}", ex.getMessage());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", ZonedDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "SKU_DUPLICATE");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
