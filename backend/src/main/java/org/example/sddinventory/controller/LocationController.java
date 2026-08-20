@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/locations")
+@RequestMapping("/api/locations")
 public class LocationController {
     private static final Logger logger = LoggerFactory.getLogger(LocationController.class);
     private final LocationService locationService;
