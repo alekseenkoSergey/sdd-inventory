@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -25,7 +25,9 @@ export class LocationFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(255)]]
@@ -45,7 +47,10 @@ export class LocationFormComponent implements OnInit {
         this.form.patchValue({ name: location.name });
       },
       error: (error) => {
-        this.errorMessage = error.message;
+        this.ngZone.run(() => {
+          this.errorMessage = this.getErrorMessage(error);
+          this.cdr.markForCheck();
+        });
       }
     });
   }
@@ -67,8 +72,11 @@ export class LocationFormComponent implements OnInit {
           this.locationUpdated.emit(location);
         },
         error: (error) => {
-          this.isSubmitting = false;
-          this.errorMessage = error.message;
+          this.ngZone.run(() => {
+            this.isSubmitting = false;
+            this.errorMessage = this.getErrorMessage(error);
+            this.cdr.markForCheck();
+          });
         }
       });
     } else {
@@ -79,11 +87,30 @@ export class LocationFormComponent implements OnInit {
           this.form.reset();
         },
         error: (error) => {
-          this.isSubmitting = false;
-          this.errorMessage = error.message;
+          this.ngZone.run(() => {
+            this.isSubmitting = false;
+            this.errorMessage = this.getErrorMessage(error);
+            this.cdr.markForCheck();
+          });
         }
       });
     }
+  }
+
+  private getErrorMessage(error: any): string {
+    if (!error) {
+      return 'An unexpected error occurred';
+    }
+    if (error instanceof Error) {
+      return error.message;
+    }
+    if (typeof error === 'string') {
+      return error;
+    }
+    if (typeof error === 'object' && error.message) {
+      return error.message;
+    }
+    return 'An unexpected error occurred';
   }
 
   close(): void {

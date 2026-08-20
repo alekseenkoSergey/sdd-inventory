@@ -52,7 +52,7 @@ export class LocationService {
     } else if (error.error instanceof ProgressEvent) {
       errorMessage = `HTTP Error ${error.status}: ${error.statusText}`;
     } else if (typeof error.error === 'string') {
-      errorMessage = `HTTP Error ${error.status}: ${error.statusText}`;
+      errorMessage = error.error;
     } else if (error.error && typeof error.error === 'object') {
       const errorResponse: ErrorResponse = error.error;
       errorMessage = errorResponse.message || `HTTP Error ${error.status}: ${error.statusText}`;
@@ -60,6 +60,7 @@ export class LocationService {
       errorMessage = `HTTP Error ${error.status}: ${error.statusText}`;
     }
 
+    console.error('Throwing error with message:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
